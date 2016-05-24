@@ -90,18 +90,26 @@ class KaleidoscopeModel: NSObject
 
     private func regionBoundaryPath() -> UIBezierPath
     {
-        let path = UIBezierPath()
-        path.moveToPoint(worldCenter)
+        if numRegions == 1
+        {
+            return UIBezierPath(arcCenter: worldCenter, radius: worldRadius,
+                                startAngle: 0, endAngle: regionAngle, clockwise: false)
+        }
+        else
+        {
+            let path = UIBezierPath()
+            path.moveToPoint(worldCenter)
 
-        let p = CGPoint(x: worldCenter.x + worldRadius, y: 0)
-        path.addLineToPoint(p)
+            let p = CGPoint(x: worldCenter.x + worldRadius, y: 0)
+            path.addLineToPoint(p)
 
-        let arc = UIBezierPath(arcCenter: worldCenter, radius: worldRadius,
-                               startAngle: 0, endAngle: regionAngle, clockwise: false)
-        path.appendPath(arc)
-
-        path.closePath()
-        return path
+            let arc = UIBezierPath(arcCenter: worldCenter, radius: worldRadius,
+                                   startAngle: 0, endAngle: regionAngle, clockwise: false)
+            path.appendPath(arc)
+            
+            path.closePath()
+            return path
+        }
     }
 }
 
