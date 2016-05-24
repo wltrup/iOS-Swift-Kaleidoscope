@@ -28,44 +28,44 @@ class KaleidoscopeView: UIView
         setNeedsDisplay()
     }
 
-    override func drawRect(rect: CGRect)
-    {
-        let N = model.numRegions
-        let alpha = model.alpha
-        let items = model.items
-
-        drawCircleAt(centerPoint, radius: radius, strokeColor: UIColor.blackColor())
-        if N > 1 { drawRadialLines(numLines: N, centerPoint: centerPoint, radius: radius, angle: alpha) }
-
-        let maxN = (N % 2 == 0 ? N : 2 * N)
-        for item in items
-        {
-            let r = item.r
-            let beta = item.beta
-
-            for n in 0 ..< maxN
-            {
-                let alpha_n = (N % 2 == 0 ? CGFloat(n) * alpha : CGFloat(n) * alpha / 2)
-
-                if N > 1
-                {
-                    let beta_n = 2 * alpha_n - beta
-                    let point = pointOffsetFromPointAtCenter(centerPoint, withRadius: r, andAngle: beta_n)
-                    let newItem = Item(center: point, r: r, beta: beta_n)
-                    newItem.color = item.color
-                    newItem.isCircle = item.isCircle
-                    drawItem(newItem)
-                }
-
-                let beta_n = 2 * alpha_n + beta
-                let point = pointOffsetFromPointAtCenter(centerPoint, withRadius: r, andAngle: beta_n)
-                let newItem = Item(center: point, r: r, beta: beta_n)
-                newItem.color = item.color
-                newItem.isCircle = item.isCircle
-                drawItem(newItem)
-            }
-        }
-    }
+//    override func drawRect(rect: CGRect)
+//    {
+//        let N = model.numRegions
+//        let alpha = model.alpha
+//        let items = model.items
+//
+//        drawCircleAt(centerPoint, radius: radius, strokeColor: UIColor.blackColor())
+//        if N > 1 { drawRadialLines(numLines: N, centerPoint: centerPoint, radius: radius, angle: alpha) }
+//
+//        let maxN = (N % 2 == 0 ? N : 2 * N)
+//        for item in items
+//        {
+//            let r = item.r
+//            let beta = item.beta
+//
+//            for n in 0 ..< maxN
+//            {
+//                let alpha_n = (N % 2 == 0 ? CGFloat(n) * alpha : CGFloat(n) * alpha / 2)
+//
+//                if N > 1
+//                {
+//                    let beta_n = 2 * alpha_n - beta
+//                    let point = pointOffsetFromPointAtCenter(centerPoint, withRadius: r, andAngle: beta_n)
+//                    let newItem = Item(center: point, r: r, beta: beta_n)
+//                    newItem.color = item.color
+//                    newItem.isCircle = item.isCircle
+//                    drawItem(newItem)
+//                }
+//
+//                let beta_n = 2 * alpha_n + beta
+//                let point = pointOffsetFromPointAtCenter(centerPoint, withRadius: r, andAngle: beta_n)
+//                let newItem = Item(center: point, r: r, beta: beta_n)
+//                newItem.color = item.color
+//                newItem.isCircle = item.isCircle
+//                drawItem(newItem)
+//            }
+//        }
+//    }
 
     private func drawItem(item: Item)
     {

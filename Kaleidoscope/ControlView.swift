@@ -8,23 +8,32 @@
 
 import UIKit
 
-protocol ControlViewDelegate: class
+@objc
+protocol ControlViewDelegate
 {
-    func controlView(controlView: ControlView, wantsToChangeModelTo model: KaleidoscopeModel)
-    func controlViewNeedsViewCenterAndRadius(controlView: ControlView) -> (center: CGPoint, radius: CGFloat)
+    func controlViewDidChangeNumRegionsTo(numRegions: Int)
+    func controlViewDidChangeNumItemsPerRegionsTo(numItemsPerRegion: Int)
 }
+
+
+struct ControlViewModel
+{
+    let numRegions: Int
+    let numItemsPerRegion: Int
+}
+
 
 class ControlView: UIView
 {
     weak var delegate: ControlViewDelegate?
 
-    func updateWithModel(model: KaleidoscopeModel)
+    func updateWithViewModel(viewModel: ControlViewModel)
     {
-        let numRegions = model.numRegions
+        let numRegions = viewModel.numRegions
         numRegionsLabel?.text = "\(numRegions)"
         numRegionsStepper?.value = Double(numRegions)
 
-        let numItemsPerRegion = model.numItemsPerRegion
+        let numItemsPerRegion = viewModel.numItemsPerRegion
         numItemsLabel?.text = "\(numItemsPerRegion)"
         numItemsStepper?.value = Double(numItemsPerRegion)
     }
@@ -39,12 +48,14 @@ class ControlView: UIView
     {
         let numRegions = Int(numRegionsStepper.value)
         let numItemsPerRegion = Int(numItemsStepper.value)
-        if let (center, radius) = delegate?.controlViewNeedsViewCenterAndRadius(self)
+        let viewModel = ControlViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion)
+        updateWithViewModel(viewModel)
+
+        switch sender
         {
-            let model = KaleidoscopeModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion,
-                                          center: center, radius: radius)
-            updateWithModel(model)
-            delegate?.controlView(self, wantsToChangeModelTo: model)
+        case numRegionsStepper: delegate?.controlViewDidChangeNumRegionsTo(numRegions)
+        case   numItemsStepper: delegate?.controlViewDidChangeNumItemsPerRegionsTo(numItemsPerRegion)
+        default: break
         }
     }
 }

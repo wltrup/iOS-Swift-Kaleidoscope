@@ -15,23 +15,29 @@ class KaleidoscopeViewController: UIViewController
         didSet { controlView.delegate = self }
     }
 
-    override func viewWillAppear(animated: Bool)
-    {
-        super.viewWillAppear(animated)
-
-        let (center, radius) = self.controlViewNeedsViewCenterAndRadius(controlView)
-        let initialKaleidoscopeModel = KaleidoscopeModel(center: center, radius: radius)
-
-        controlView.updateWithModel(initialKaleidoscopeModel)
-        kaleidoscopeView.updateWithModel(initialKaleidoscopeModel)
-    }
+//    override func viewWillAppear(animated: Bool)
+//    {
+//        super.viewWillAppear(animated)
+//
+//        let (center, radius) = self.controlViewNeedsViewCenterAndRadius(controlView)
+//        let initialKaleidoscopeModel = KaleidoscopeModel(center: center, radius: radius)
+//
+//        controlView.updateWithModel(initialKaleidoscopeModel)
+//        kaleidoscopeView.updateWithModel(initialKaleidoscopeModel)
+//    }
 }
 
 extension KaleidoscopeViewController: ControlViewDelegate
 {
-    func controlView(controlView: ControlView, wantsToChangeModelTo model: KaleidoscopeModel)
-    { kaleidoscopeView.updateWithModel(model) }
+    func controlViewDidChangeNumRegionsTo(numRegions: Int)
+    {
+        // XXX
+        print("numRegions: \(numRegions)")
+    }
 
-    func controlViewNeedsViewCenterAndRadius(controlView: ControlView) -> (center: CGPoint, radius: CGFloat)
-    { return (kaleidoscopeView.centerPoint, kaleidoscopeView.radius) }
+    func controlViewDidChangeNumItemsPerRegionsTo(numItemsPerRegion: Int)
+    {
+        // XXX
+        print("numItemsPerRegion: \(numItemsPerRegion)")
+    }
 }
