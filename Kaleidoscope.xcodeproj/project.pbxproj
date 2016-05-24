@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3B7A012B1CF3ECFA00543C90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A012A1CF3ECFA00543C90 /* AppDelegate.swift */; };
-		3B7A012D1CF3ECFA00543C90 /* KaleidoscopeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A012C1CF3ECFA00543C90 /* KaleidoscopeViewController.swift */; };
+		3B7A012D1CF3ECFA00543C90 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A012C1CF3ECFA00543C90 /* ViewController.swift */; };
 		3B7A01301CF3ECFA00543C90 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B7A012E1CF3ECFA00543C90 /* Main.storyboard */; };
 		3B7A01321CF3ECFA00543C90 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B7A01311CF3ECFA00543C90 /* Assets.xcassets */; };
 		3B7A01351CF3ECFA00543C90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B7A01331CF3ECFA00543C90 /* LaunchScreen.storyboard */; };
@@ -22,7 +22,7 @@
 /* Begin PBXFileReference section */
 		3B7A01271CF3ECFA00543C90 /* Kaleidoscope.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kaleidoscope.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B7A012A1CF3ECFA00543C90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3B7A012C1CF3ECFA00543C90 /* KaleidoscopeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaleidoscopeViewController.swift; sourceTree = "<group>"; };
+		3B7A012C1CF3ECFA00543C90 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		3B7A012F1CF3ECFA00543C90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3B7A01311CF3ECFA00543C90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3B7A01341CF3ECFA00543C90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -65,10 +65,10 @@
 			isa = PBXGroup;
 			children = (
 				3B7A012A1CF3ECFA00543C90 /* AppDelegate.swift */,
+				3B7A012C1CF3ECFA00543C90 /* ViewController.swift */,
 				3B7A01401CF4116700543C90 /* KaleidoscopeModel.swift */,
-				3B7A012C1CF3ECFA00543C90 /* KaleidoscopeViewController.swift */,
-				3B7A013C1CF3EE5F00543C90 /* KaleidoscopeView.swift */,
 				3B7A013E1CF4044500543C90 /* ControlView.swift */,
+				3B7A013C1CF3EE5F00543C90 /* KaleidoscopeView.swift */,
 				3B7A01421CF41CE500543C90 /* CGFloat+extensions.swift */,
 				3B7A01441CF4ADD500543C90 /* UIColor+RandomColor.swift */,
 				3B7A012E1CF3ECFA00543C90 /* Main.storyboard */,
@@ -154,7 +154,7 @@
 				3B7A013F1CF4044500543C90 /* ControlView.swift in Sources */,
 				3B7A01451CF4ADD500543C90 /* UIColor+RandomColor.swift in Sources */,
 				3B7A01431CF41CE500543C90 /* CGFloat+extensions.swift in Sources */,
-				3B7A012D1CF3ECFA00543C90 /* KaleidoscopeViewController.swift in Sources */,
+				3B7A012D1CF3ECFA00543C90 /* ViewController.swift in Sources */,
 				3B7A012B1CF3ECFA00543C90 /* AppDelegate.swift in Sources */,
 				3B7A013D1CF3EE5F00543C90 /* KaleidoscopeView.swift in Sources */,
 			);
