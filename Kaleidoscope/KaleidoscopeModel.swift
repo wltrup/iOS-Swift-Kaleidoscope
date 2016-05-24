@@ -18,105 +18,114 @@ class KaleidoscopeModel: NSObject
 {
     weak var delegate: KaleidoscopeModelDelegate?
 
-    var worldCenter = CGPointZero  { didSet { updateState() } }
-    var worldRadius: CGFloat = 0   { didSet { updateState() } }
+    var worldCenter: CGPoint!  { didSet { resetState() } }
+    var worldRadius: CGFloat!   { didSet { resetState() } }
 
-    var numRegions:        Int = 4 { didSet { updateState() } }
-    var numItemsPerRegion: Int = 5 { didSet { updateState() } }
+    var numRegions:        Int = 4 { didSet { resetState() } }
+    var numItemsPerRegion: Int = 5 { didSet { resetState() } }
 
-    private func updateState()
+    private var regionAngle: CGFloat!
+
+    private let dynamicAnimator = UIDynamicAnimator()
+    private var items = [Item]()
+
+    private func resetState()
     {
-        // XXX
+        guard worldCenter != nil && worldRadius != nil else { return }
+
+        assert(numRegions > 0, "invalid number of regions (\(numRegions))")
+        assert(numItemsPerRegion > 0, "invalid number of items (\(numItemsPerRegion))")
+
+        regionAngle = 2 * CGFloat(M_PI) / CGFloat(numRegions)
+        createItems()
+        resetDynamicAnimator()
+
         delegate?.kaleidoscopeModelDidUpdate(self)
     }
-    
-//    let alpha: CGFloat
-//    let items: [Item]
 
-//    var dynamicAnimator = UIDynamicAnimator()
+    private func createItems()
+    {
+        let lambda: CGFloat = 0.25
+        let oneMinusLambda = 1 - lambda
 
-//    init(numRegions: Int = 4, numItemsPerRegion: Int = 5, center: CGPoint, radius: CGFloat)
-//    {
-//        assert(numRegions > 0, "invalid number of regions (\(numRegions))")
-//        self.numRegions = numRegions
-//        self.alpha = 2 * CGFloat(M_PI) / CGFloat(numRegions)
-//
-//        assert(numItemsPerRegion > 0, "invalid number of items (\(numItemsPerRegion))")
-//        self.numItemsPerRegion = numItemsPerRegion
-//
-//        let lambda: CGFloat = 0.25
-//        let oneMinusLambda = 1 - lambda
-//
-//        let minBeta = lambda * self.alpha
-//        let maxBeta = oneMinusLambda * self.alpha
-//        var betas = [CGFloat]()
-//
-//        let minRadius = lambda * radius
-//        let maxRadius = oneMinusLambda * radius
-//        var radii = [CGFloat]()
-//
-//        for _ in 0 ..< numItemsPerRegion
-//        {
-//            let beta = CGFloat.randomUniform(a: minBeta, b: maxBeta)
-//            betas.append(beta)
-//
-//            let r = CGFloat.randomUniform(a: minRadius, b: maxRadius)
-//            radii.append(r)
-//        }
-//
-//        var tempItems = [Item]()
-//        let pairs = zip(radii, betas)
-//        for (radius, beta) in pairs
-//        {
-//            let x = center.x + radius * cos(beta)
-//            let y = center.y - radius * sin(beta)
-//            let item = Item(center: CGPoint(x: x, y: y), r: radius, beta: beta)
-//            tempItems.append(item)
-//        }
-//        self.items = tempItems
-//
-//        super.init()
-//
-////        let gravityBehavior = UIGravityBehavior(items: self.items)
-////        self.dynamicAnimator.addBehavior(gravityBehavior)
-////
-////        let collisionBehavior = UICollisionBehavior(items: self.items)
-////        self.dynamicAnimator.addBehavior(collisionBehavior)
-//    }
+        let minTheta = lambda * regionAngle
+        let maxTheta = oneMinusLambda * regionAngle
+        var thetas = [CGFloat]()
+
+        let minRadius = lambda * worldRadius
+        let maxRadius = oneMinusLambda * worldRadius
+        var rs = [CGFloat]()
+
+        for _ in 0 ..< numItemsPerRegion
+        {
+            let theta = CGFloat.randomUniform(a: minTheta, b: maxTheta)
+            thetas.append(theta)
+
+            let r = CGFloat.randomUniform(a: minRadius, b: maxRadius)
+            rs.append(r)
+        }
+
+        let pairs = zip(rs, thetas)
+        for (r, theta) in pairs
+        {
+            let x = worldCenter.x + r * cos(theta)
+            let y = worldCenter.y - r * sin(theta)
+            let center = CGPoint(x: x, y: y)
+            let item = Item(center: center)
+            items.append(item)
+        }
+    }
+
+    private func resetDynamicAnimator()
+    {
+        dynamicAnimator.removeAllBehaviors()
+
+        let gravityBehavior = UIGravityBehavior(items: items)
+        self.dynamicAnimator.addBehavior(gravityBehavior)
+
+        let collisionBehavior = UICollisionBehavior(items: items)
+        collisionBehavior.addBoundaryWithIdentifier("region boundary", forPath: regionBoundaryPath())
+        self.dynamicAnimator.addBehavior(collisionBehavior)
+    }
+
+    private func regionBoundaryPath() -> UIBezierPath
+    {
+        let path = UIBezierPath()
+        path.moveToPoint(worldCenter)
+
+        let p = CGPoint(x: worldCenter.x + worldRadius, y: 0)
+        path.addLineToPoint(p)
+
+        let arc = UIBezierPath(arcCenter: worldCenter, radius: worldRadius,
+                               startAngle: 0, endAngle: regionAngle, clockwise: false)
+        path.appendPath(arc)
+
+        path.closePath()
+        return path
+    }
 }
 
 
-//class Item: NSObject, UIDynamicItem
-//{
-//    static let SIZE: CGFloat = 20
-//
-//    var isCircle = true
-//    var color = UIColor.blackColor()
-//
-//    var center: CGPoint
-//    var transform: CGAffineTransform = CGAffineTransformIdentity
-//
-//    var bounds: CGRect { return CGRect(x: 0, y: 0, width: Item.SIZE, height: Item.SIZE) }
-//
-//    let radius: CGFloat
-//
-//    let r: CGFloat
-//    let beta: CGFloat
-//
-//    init(center: CGPoint, r: CGFloat, beta: CGFloat)
-//    {
-//        self.isCircle = CGFloat.randomBool
-//        self.radius = Item.SIZE / 2
-//
-//        self.r = r
-//        self.beta = beta
-//
-//        self.color = UIColor.randomColor()
-//
-//        self.center = center
-//        super.init()
-//    }
-//
-//    var collisionBoundsType: UIDynamicItemCollisionBoundsType
-//    { return self.isCircle ? .Ellipse : .Rectangle }
-//}
+class Item: NSObject, UIDynamicItem
+{
+    static let SIZE: CGFloat = 20
+
+    var isCircle = true
+    var color = UIColor.blackColor()
+
+    var center: CGPoint
+    var transform: CGAffineTransform = CGAffineTransformIdentity
+
+    var bounds: CGRect { return CGRect(x: 0, y: 0, width: Item.SIZE, height: Item.SIZE) }
+
+    init(center: CGPoint)
+    {
+        self.isCircle = CGFloat.randomBool
+        self.color = UIColor.randomColor()
+        self.center = center
+        super.init()
+    }
+
+    var collisionBoundsType: UIDynamicItemCollisionBoundsType
+    { return self.isCircle ? .Ellipse : .Rectangle }
+}
