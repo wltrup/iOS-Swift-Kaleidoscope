@@ -8,21 +8,27 @@
 
 import UIKit
 
+@objc
+protocol KaleidoscopeModelDelegate
+{
+    func kaleidoscopeModelDidUpdate(model: KaleidoscopeModel)
+}
 
 class KaleidoscopeModel: NSObject
 {
-    let worldCenter: CGPoint
-    let worldRadius: CGFloat
+    weak var delegate: KaleidoscopeModelDelegate?
 
-    init(worldCenter: CGPoint, worldRadius: CGFloat)
+    var worldCenter = CGPointZero  { didSet { updateState() } }
+    var worldRadius: CGFloat = 0   { didSet { updateState() } }
+
+    var numRegions:        Int = 4 { didSet { updateState() } }
+    var numItemsPerRegion: Int = 5 { didSet { updateState() } }
+
+    private func updateState()
     {
-        self.worldCenter = worldCenter
-        self.worldRadius = worldRadius
-        super.init()
+        // XXX
+        delegate?.kaleidoscopeModelDidUpdate(self)
     }
-
-    var numRegions: Int = 4
-    var numItemsPerRegion: Int = 5
     
 //    let alpha: CGFloat
 //    let items: [Item]

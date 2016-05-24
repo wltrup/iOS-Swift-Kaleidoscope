@@ -10,11 +10,20 @@ import UIKit
 
 class ViewController: UIViewController
 {
-    private var kaleidoscopeModel: KaleidoscopeModel!
+    private var kaleidoscopeModel: KaleidoscopeModel! {
+        didSet { kaleidoscopeModel.delegate = self }
+    }
 
-    @IBOutlet private weak var kaleidoscopeView: KaleidoscopeView!
     @IBOutlet private weak var controlView: ControlView! {
         didSet { controlView.delegate = self }
+    }
+
+    @IBOutlet private weak var kaleidoscopeView: KaleidoscopeView!
+
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        kaleidoscopeModel = KaleidoscopeModel()
     }
 
     override func viewWillAppear(animated: Bool)
@@ -22,29 +31,32 @@ class ViewController: UIViewController
         super.viewWillAppear(animated)
 
         let viewCenter = kaleidoscopeView.viewCenter
+        kaleidoscopeModel.worldCenter = viewCenter
+
         let viewRadius = kaleidoscopeView.viewRadius
-        kaleidoscopeModel = KaleidoscopeModel(worldCenter: viewCenter, worldRadius: viewRadius)
+        kaleidoscopeModel.worldRadius = viewRadius
 
         let numRegions = kaleidoscopeModel.numRegions
         let numItemsPerRegion = kaleidoscopeModel.numItemsPerRegion
         let controlViewModel = ControlViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion)
         controlView.updateWithViewModel(controlViewModel)
+    }
+}
 
-//        kaleidoscopeView.updateWithModel(initialKaleidoscopeModel)
+extension ViewController: KaleidoscopeModelDelegate
+{
+    func kaleidoscopeModelDidUpdate(model: KaleidoscopeModel)
+    {
+        // XXX
+        kaleidoscopeView?.setNeedsDisplay()
     }
 }
 
 extension ViewController: ControlViewDelegate
 {
     func controlViewDidChangeNumRegionsTo(numRegions: Int)
-    {
-        // XXX
-        print("numRegions: \(numRegions)")
-    }
+    { kaleidoscopeModel.numRegions = numRegions }
 
     func controlViewDidChangeNumItemsPerRegionsTo(numItemsPerRegion: Int)
-    {
-        // XXX
-        print("numItemsPerRegion: \(numItemsPerRegion)")
-    }
+    { kaleidoscopeModel.numItemsPerRegion = numItemsPerRegion }
 }
