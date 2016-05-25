@@ -137,7 +137,7 @@ protocol ItemDelegate
 
 class Item: NSObject, UIDynamicItem
 {
-    static var size: CGFloat = 20
+    static var size: CGFloat = 5
     static let TWO_PI = CGFloat(2*M_PI)
 
     weak var delegate: ItemDelegate?

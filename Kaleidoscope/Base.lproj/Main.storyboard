@@ -100,7 +100,7 @@
                                         <rect key="frame" x="302" y="74" width="60" height="30"/>
                                         <color key="backgroundColor" red="0.97773261850000004" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="15" minValue="10" maxValue="25" translatesAutoresizingMaskIntoConstraints="NO" id="iJC-XT-tZF">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="15" minValue="5" maxValue="25" translatesAutoresizingMaskIntoConstraints="NO" id="iJC-XT-tZF">
                                         <rect key="frame" x="360" y="74" width="222" height="31"/>
                                         <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="maximumTrackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
