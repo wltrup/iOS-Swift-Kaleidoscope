@@ -44,63 +44,35 @@ class KaleidoscopeView: UIView
         UIColor.redColor().colorWithAlphaComponent(0.1).setFill()
         path.fill()
 
-//        let maxN = (N % 2 == 0 ? N : 2 * N)
+        let maxN = (N % 2 == 0 ? N : 2 * N)
         for item in items
         {
-            drawItem(item)
+            fillItem(item)
 
-//            let r = item.r
-//            let theta = item.theta
-//
-//            for n in 0 ..< maxN
-//            {
-//                let alpha_n = (N % 2 == 0 ? CGFloat(n) * regionAngle : CGFloat(n) * regionAngle / 2)
-//
-//                if N > 1
-//                {
-//                    let theta_n = 2 * alpha_n - theta
-//                    let point = pointOffsetFromPointAtCenter(worldCenter, withRadius: r, andAngle: theta_n)
-//                    let newItem = Item(center: point, r: r, theta: theta_n)
-//                    newItem.color = item.color
-//                    newItem.isCircle = item.isCircle
-//                    drawItem(newItem)
-//                }
-//
-//                let theta_n = 2 * alpha_n + theta
-//                let point = pointOffsetFromPointAtCenter(centerPoint, withRadius: r, andAngle: theta_n)
-//                let newItem = Item(center: point, r: r, theta: theta_n)
-//                newItem.color = item.color
-//                newItem.isCircle = item.isCircle
-//                drawItem(newItem)
-//            }
+            let r = item.r
+            let theta = item.theta
+
+            for n in 0 ..< maxN
+            {
+                let alpha_n = (N % 2 == 0 ? CGFloat(n) * regionAngle : CGFloat(n) * regionAngle / 2)
+
+                if N > 1
+                {
+                    let theta_n = 2 * alpha_n - theta
+                    let point = pointOffsetFromPointAtCenter(worldCenter, withRadius: r, andAngle: theta_n)
+                    drawCircleAt(point, radius: Item.SIZE/2, fillColor: item.color)
+                }
+
+                let theta_n = 2 * alpha_n + theta
+                let point = pointOffsetFromPointAtCenter(worldCenter, withRadius: r, andAngle: theta_n)
+                drawCircleAt(point, radius: Item.SIZE/2, fillColor: item.color)
+            }
         }
     }
 }
 
 extension KaleidoscopeView
 {
-//    var model: KaleidoscopeModel!
-
-//    func updateWithModel(model: KaleidoscopeModel)
-//    {
-//        self.model = model
-//        setNeedsDisplay()
-//    }
-
-
-    private func drawItem(item: Item)
-    {
-        switch item.collisionBoundsType
-        {
-        case .Ellipse:
-            fillDotCenteredAtPoint(item)
-        case .Rectangle:
-            fillSquareCenteredAtPoint(item)
-        case .Path:
-            break
-        }
-    }
-
     private func pointOffsetFromPointAtCenter(centerPoint: CGPoint,
                                               withRadius radius: CGFloat,
                                                          andAngle angle: CGFloat) -> CGPoint
@@ -110,33 +82,8 @@ extension KaleidoscopeView
         return CGPoint(x: x, y: y)
     }
 
-    private func fillDotCenteredAtPoint(item: Item)
+    private func fillItem(item: Item)
     { drawCircleAt(x: item.center.x, y: item.center.y, radius: Item.SIZE/2, strokeColor: nil, fillColor: item.color) }
-
-    private func fillSquareCenteredAtPoint(item: Item)
-    { drawSquareAt(item.center, size: Item.SIZE, strokeColor: nil, fillColor: item.color) }
-
-    private func drawSquareAt(p: CGPoint, size: CGFloat, strokeColor: UIColor? = nil, fillColor: UIColor? = nil)
-    { drawSquareAt(x: p.x, y: p.y, size: size, strokeColor: strokeColor, fillColor: fillColor) }
-
-    private func drawSquareAt(x x: CGFloat, y: CGFloat, size: CGFloat,
-                                strokeColor: UIColor? = nil, fillColor: UIColor? = nil)
-    {
-        let origin = CGPoint(x: x - size/2, y: y - size/2)
-        let cgSize = CGSize(width: size, height: size)
-        let rect = CGRect(origin: origin, size: cgSize)
-        let square = UIBezierPath(rect: rect)
-        if strokeColor != nil
-        {
-            strokeColor!.setStroke()
-            square.stroke()
-        }
-        if fillColor != nil
-        {
-            fillColor!.setFill()
-            square.fill()
-        }
-    }
 
     private func drawCircleAt(p: CGPoint, radius: CGFloat, strokeColor: UIColor? = nil, fillColor: UIColor? = nil)
     { drawCircleAt(x: p.x, y: p.y, radius: radius, strokeColor: strokeColor, fillColor: fillColor) }
