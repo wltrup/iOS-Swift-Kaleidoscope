@@ -35,14 +35,10 @@ class KaleidoscopeView: UIView
 
         let items = kaleidoscopeModel.items
 
-        drawCircleAt(worldCenter, radius: worldRadius, strokeColor: UIColor.blackColor())
+        drawCircleAt(worldCenter, radius: worldRadius, strokeColor: UIColor.whiteColor())
         if N > 1 { drawRadialLines(numLines: N, centerPoint: worldCenter, radius: worldRadius, angle: regionAngle) }
 
-        let path = kaleidoscopeModel.regionBoundaryPath()
-        UIColor.blueColor().setStroke()
-        path.stroke()
-        UIColor.redColor().colorWithAlphaComponent(0.1).setFill()
-        path.fill()
+        // drawElementaryRegion()
 
         let maxN = (N % 2 == 0 ? N : 2 * N)
         for item in items
@@ -73,6 +69,15 @@ class KaleidoscopeView: UIView
 
 extension KaleidoscopeView
 {
+    private func drawElementaryRegion()
+    {
+        let path = kaleidoscopeModel.regionBoundaryPath()
+        UIColor.blueColor().setStroke()
+        path.stroke()
+        UIColor.redColor().colorWithAlphaComponent(0.1).setFill()
+        path.fill()
+    }
+
     private func pointOffsetFromPointAtCenter(centerPoint: CGPoint,
                                               withRadius radius: CGFloat,
                                                          andAngle angle: CGFloat) -> CGPoint
@@ -120,7 +125,7 @@ extension KaleidoscopeView
             path.moveToPoint(centerPoint)
             path.addLineToPoint(point)
         }
-        (strokeColor ?? UIColor.blackColor()).setStroke()
+        (strokeColor ?? UIColor.whiteColor()).setStroke()
         path.stroke()
     }
 }

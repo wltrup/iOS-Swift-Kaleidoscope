@@ -141,7 +141,7 @@ class Item: NSObject, UIDynamicItem
     static let TWO_PI = CGFloat(2*M_PI)
 
     weak var delegate: ItemDelegate?
-    var color = UIColor.blackColor()
+    var color = UIColor.whiteColor()
 
     var transform: CGAffineTransform = CGAffineTransformIdentity
     var center: CGPoint { didSet { delegate?.itemDidUpdate(self) } }
