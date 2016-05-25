@@ -1,5 +1,5 @@
 //
-//  ControlView.swift
+//  ControlsViewController.swift
 //  Kaleidoscope
 //
 //  Created by Wagner Truppel on 24/05/2016.
@@ -19,7 +19,7 @@ protocol ControlViewDelegate
 }
 
 
-class ControlView: UIView
+class ControlsViewController: UITableViewController
 {
     weak var delegate: ControlViewDelegate?
 

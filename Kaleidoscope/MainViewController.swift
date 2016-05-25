@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  Kaleidoscope
 //
 //  Created by Wagner Truppel on 24/05/2016.
@@ -18,15 +18,15 @@ struct ViewModel
 }
 
 
-class ViewController: UIViewController
+class MainViewController: UIViewController
 {
     private var kaleidoscopeModel: KaleidoscopeModel! {
         didSet { kaleidoscopeModel.delegate = self }
     }
 
-    @IBOutlet private weak var controlView: ControlView! {
-        didSet { controlView.delegate = self }
-    }
+//    @IBOutlet private weak var controlView: ControlView! {
+//        didSet { controlView.delegate = self }
+//    }
 
     @IBOutlet private weak var kaleidoscopeView: KaleidoscopeView!
 
@@ -46,28 +46,28 @@ class ViewController: UIViewController
         let viewRadius = kaleidoscopeView.viewRadius
         kaleidoscopeModel.worldRadius = viewRadius
 
-        let numRegions = kaleidoscopeModel.numRegions
-        let numItemsPerRegion = kaleidoscopeModel.numItemsPerRegion
-        let itemSize = Item.size
-        let showRegions = kaleidoscopeView.showRegions
+//        let numRegions = kaleidoscopeModel.numRegions
+//        let numItemsPerRegion = kaleidoscopeModel.numItemsPerRegion
+//        let itemSize = Item.size
+//        let showRegions = kaleidoscopeView.showRegions
 
-        let viewModel = ViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion,
-                                  itemSize: itemSize, showRegions: showRegions)
+//        let viewModel = ViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion,
+//                                  itemSize: itemSize, showRegions: showRegions)
 
-        controlView.updateWithViewModel(viewModel)
+//        controlView.updateWithViewModel(viewModel)
         kaleidoscopeView.kaleidoscopeModel = kaleidoscopeModel
     }
 }
 
 
-extension ViewController: KaleidoscopeModelDelegate
+extension MainViewController: KaleidoscopeModelDelegate
 {
     func kaleidoscopeModelDidUpdate(model: KaleidoscopeModel)
     { kaleidoscopeView?.setNeedsDisplay() }
 }
 
 
-extension ViewController: ControlViewDelegate
+extension MainViewController: ControlViewDelegate
 {
     func controlViewDidChangeNumRegionsTo(numRegions: Int)
     { kaleidoscopeModel.numRegions = numRegions }
