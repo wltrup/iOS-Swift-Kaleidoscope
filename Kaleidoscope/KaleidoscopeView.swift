@@ -12,6 +12,7 @@ import UIKit
 class KaleidoscopeView: UIView
 {
     var kaleidoscopeModel: KaleidoscopeModel!
+    var showRegions = false
     
     var viewRadius: CGFloat
     {
@@ -35,8 +36,11 @@ class KaleidoscopeView: UIView
 
         let items = kaleidoscopeModel.items
 
-        drawCircleAt(worldCenter, radius: worldRadius, strokeColor: UIColor.whiteColor())
-        if N > 1 { drawRadialLines(numLines: N, centerPoint: worldCenter, radius: worldRadius, angle: regionAngle) }
+        if showRegions
+        {
+            drawCircleAt(worldCenter, radius: worldRadius, strokeColor: UIColor.whiteColor())
+            if N > 1 { drawRadialLines(numLines: N, centerPoint: worldCenter, radius: worldRadius, angle: regionAngle) }
+        }
 
         // drawElementaryRegion()
 
@@ -56,12 +60,12 @@ class KaleidoscopeView: UIView
                 {
                     let theta_n = 2 * alpha_n - theta
                     let point = pointOffsetFromPointAtCenter(worldCenter, withRadius: r, andAngle: theta_n)
-                    drawCircleAt(point, radius: Item.SIZE/2, fillColor: item.color)
+                    drawCircleAt(point, radius: Item.size/2, fillColor: item.color)
                 }
 
                 let theta_n = 2 * alpha_n + theta
                 let point = pointOffsetFromPointAtCenter(worldCenter, withRadius: r, andAngle: theta_n)
-                drawCircleAt(point, radius: Item.SIZE/2, fillColor: item.color)
+                drawCircleAt(point, radius: Item.size/2, fillColor: item.color)
             }
         }
     }
@@ -88,7 +92,7 @@ extension KaleidoscopeView
     }
 
     private func fillItem(item: Item)
-    { drawCircleAt(x: item.center.x, y: item.center.y, radius: Item.SIZE/2, strokeColor: nil, fillColor: item.color) }
+    { drawCircleAt(x: item.center.x, y: item.center.y, radius: Item.size/2, strokeColor: nil, fillColor: item.color) }
 
     private func drawCircleAt(p: CGPoint, radius: CGFloat, strokeColor: UIColor? = nil, fillColor: UIColor? = nil)
     { drawCircleAt(x: p.x, y: p.y, radius: radius, strokeColor: strokeColor, fillColor: fillColor) }

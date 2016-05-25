@@ -13,6 +13,8 @@ struct ViewModel
 {
     let numRegions: Int
     let numItemsPerRegion: Int
+    let itemSize: CGFloat
+    let showRegions: Bool
 }
 
 
@@ -46,7 +48,11 @@ class ViewController: UIViewController
 
         let numRegions = kaleidoscopeModel.numRegions
         let numItemsPerRegion = kaleidoscopeModel.numItemsPerRegion
-        let viewModel = ViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion)
+        let itemSize = Item.size
+        let showRegions = kaleidoscopeView.showRegions
+
+        let viewModel = ViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion,
+                                  itemSize: itemSize, showRegions: showRegions)
 
         controlView.updateWithViewModel(viewModel)
         kaleidoscopeView.kaleidoscopeModel = kaleidoscopeModel
@@ -68,4 +74,16 @@ extension ViewController: ControlViewDelegate
 
     func controlViewDidChangeNumItemsPerRegionsTo(numItemsPerRegion: Int)
     { kaleidoscopeModel.numItemsPerRegion = numItemsPerRegion }
+
+    func controlViewDidChangeItemSizeTo(itemSize: CGFloat)
+    {
+        Item.size = itemSize
+        kaleidoscopeView?.setNeedsDisplay()
+    }
+
+    func controlViewDidChangeShowRegionsTo(showRegions: Bool)
+    {
+        kaleidoscopeView.showRegions = showRegions
+        kaleidoscopeView?.setNeedsDisplay()
+    }
 }

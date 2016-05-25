@@ -137,7 +137,7 @@ protocol ItemDelegate
 
 class Item: NSObject, UIDynamicItem
 {
-    static let SIZE: CGFloat = 20
+    static var size: CGFloat = 20
     static let TWO_PI = CGFloat(2*M_PI)
 
     weak var delegate: ItemDelegate?
@@ -146,7 +146,7 @@ class Item: NSObject, UIDynamicItem
     var transform: CGAffineTransform = CGAffineTransformIdentity
     var center: CGPoint { didSet { delegate?.itemDidUpdate(self) } }
 
-    var bounds: CGRect { return CGRect(x: 0, y: 0, width: Item.SIZE, height: Item.SIZE) }
+    var bounds: CGRect { return CGRect(x: 0, y: 0, width: Item.size, height: Item.size) }
 
     var r: CGFloat
     {
