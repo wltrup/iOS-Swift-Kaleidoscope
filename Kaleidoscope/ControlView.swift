@@ -25,30 +25,33 @@ class ControlView: UIView
 
     func updateWithViewModel(viewModel: ViewModel)
     {
-        let numRegions = viewModel.numRegions
-        numRegionsLabel?.text = "\(numRegions)"
-        numRegionsStepper?.value = Double(numRegions)
-
-        let numItemsPerRegion = viewModel.numItemsPerRegion
-        numItemsLabel?.text = "\(numItemsPerRegion)"
-        numItemsStepper?.value = Double(numItemsPerRegion)
-
-        let itemSize = viewModel.itemSize
-        itemSizeLabel?.text = "\(Int(itemSize))"
-        itemSizeSlider?.value = Float(itemSize)
-
-        let showRegions = viewModel.showRegions
-        showRegionsSwitch.on = showRegions
+//        let numRegions = viewModel.numRegions
+//        numRegionsLabel?.text = "\(numRegions)"
+//        numRegionsStepper?.value = Double(numRegions)
+//
+//        let numItemsPerRegion = viewModel.numItemsPerRegion
+//        numItemsLabel?.text = "\(numItemsPerRegion)"
+//        numItemsStepper?.value = Double(numItemsPerRegion)
+//
+//        let itemSize = viewModel.itemSize
+//        itemSizeLabel?.text = "\(Int(itemSize))"
+//        itemSizeSlider?.value = Float(itemSize)
+//
+//        let showRegions = viewModel.showRegions
+//        showRegionsSwitch.on = showRegions
     }
 
-    @IBOutlet private weak var numRegionsLabel: UILabel!
-    @IBOutlet private weak var   numItemsLabel: UILabel!
-    @IBOutlet private weak var   itemSizeLabel: UILabel!
+    @IBOutlet private weak var     numRegionsLabel: UILabel!
+    @IBOutlet private weak var       numItemsLabel: UILabel!
+    @IBOutlet private weak var       itemSizeLabel: UILabel!
+    @IBOutlet private weak var itemElasticityLabel: UILabel!
 
     @IBOutlet private weak var numRegionsStepper: UIStepper!
     @IBOutlet private weak var   numItemsStepper: UIStepper!
 
-    @IBOutlet private weak var    itemSizeSlider: UISlider!
+    @IBOutlet private weak var       itemSizeSlider: UISlider!
+    @IBOutlet private weak var itemElasticitySlider: UISlider!
+
     @IBOutlet private weak var showRegionsSwitch: UISwitch!
 
     @IBAction private func stepperValueChanged(sender: UIStepper)
@@ -68,7 +71,7 @@ class ControlView: UIView
         }
     }
 
-    @IBAction private func sliderValueChanged()
+    @IBAction private func sliderValueChanged(sender: UISlider)
     {
         createViewModel()
         let itemSize = CGFloat(itemSizeSlider.value)
