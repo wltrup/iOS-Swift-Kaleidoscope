@@ -20,8 +20,8 @@ class KaleidoscopeModel: NSObject
 {
     weak var delegate: KaleidoscopeModelDelegate?
 
-    var worldCenter: CGPoint!  { didSet { resetState() } }
-    var worldRadius: CGFloat!   { didSet { resetState() } }
+    var worldCenter: CGPoint! { didSet { resetState() } }
+    var worldRadius: CGFloat! { didSet { resetState() } }
 
     var numRegions:        Int = 4 { didSet { resetState() } }
     var numItemsPerRegion: Int = 5 { didSet { resetState() } }
@@ -82,33 +82,39 @@ class KaleidoscopeModel: NSObject
         dynamicAnimator.removeAllBehaviors()
 
         let gravityBehavior = UIGravityBehavior(items: items)
-        self.dynamicAnimator.addBehavior(gravityBehavior)
+        dynamicAnimator.addBehavior(gravityBehavior)
+
+        let dynamicItemBehavior = UIDynamicItemBehavior(items: items)
+        dynamicItemBehavior.elasticity = 1.0
+        dynamicAnimator.addBehavior(dynamicItemBehavior)
 
         let collisionBehavior = UICollisionBehavior(items: items)
         collisionBehavior.addBoundaryWithIdentifier("region boundary", forPath: regionBoundaryPath())
-        self.dynamicAnimator.addBehavior(collisionBehavior)
+        dynamicAnimator.addBehavior(collisionBehavior)
     }
 
-    private func regionBoundaryPath() -> UIBezierPath
+    func regionBoundaryPath() -> UIBezierPath
     {
         if numRegions == 1
         {
             return UIBezierPath(arcCenter: worldCenter, radius: worldRadius,
-                                startAngle: 0, endAngle: regionAngle, clockwise: false)
+                                startAngle: 0, endAngle: regionAngle, clockwise: true)
         }
         else
         {
             let path = UIBezierPath()
             path.moveToPoint(worldCenter)
 
-            let p = CGPoint(x: worldCenter.x + worldRadius, y: 0)
+            let p = CGPoint(x: worldCenter.x + worldRadius * cos(regionAngle),
+                            y: worldCenter.y - worldRadius * sin(regionAngle))
             path.addLineToPoint(p)
 
-            let arc = UIBezierPath(arcCenter: worldCenter, radius: worldRadius,
-                                   startAngle: 0, endAngle: regionAngle, clockwise: false)
-            path.appendPath(arc)
-            
-            path.closePath()
+            let startAngle = CGFloat(numRegions-1) * regionAngle
+            let   endAngle = CGFloat(numRegions)   * regionAngle
+            path.addArcWithCenter(worldCenter, radius: worldRadius,
+                                  startAngle: startAngle, endAngle: endAngle, clockwise: true)
+
+            path.addLineToPoint(worldCenter)
             return path
         }
     }
@@ -132,9 +138,9 @@ protocol ItemDelegate
 class Item: NSObject, UIDynamicItem
 {
     static let SIZE: CGFloat = 20
-    weak var delegate: ItemDelegate?
+    static let TWO_PI = CGFloat(2*M_PI)
 
-    var isCircle = true
+    weak var delegate: ItemDelegate?
     var color = UIColor.blackColor()
 
     var transform: CGAffineTransform = CGAffineTransformIdentity
@@ -153,7 +159,7 @@ class Item: NSObject, UIDynamicItem
     {
         let dx = center.x - worldCenter.x
         let dy = center.y - worldCenter.y
-        return atan2(dy, dx)
+        return (Item.TWO_PI - atan2(dy, dx)) % Item.TWO_PI
     }
 
     let worldCenter: CGPoint
@@ -161,7 +167,6 @@ class Item: NSObject, UIDynamicItem
     init(worldCenter: CGPoint, r: CGFloat, theta: CGFloat)
     {
         self.worldCenter = worldCenter
-        self.isCircle = CGFloat.randomBool
         self.color = UIColor.randomColor()
         let x = worldCenter.x + r * cos(theta)
         let y = worldCenter.y - r * sin(theta)
@@ -170,5 +175,5 @@ class Item: NSObject, UIDynamicItem
     }
 
     var collisionBoundsType: UIDynamicItemCollisionBoundsType
-    { return self.isCircle ? .Ellipse : .Rectangle }
+    { return .Ellipse }
 }

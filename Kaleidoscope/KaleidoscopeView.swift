@@ -27,13 +27,22 @@ class KaleidoscopeView: UIView
     {
         guard kaleidoscopeModel != nil else { return }
 
+        let worldCenter = kaleidoscopeModel.worldCenter
+        let worldRadius = kaleidoscopeModel.worldRadius
+
         let N = kaleidoscopeModel.numRegions
         let regionAngle = kaleidoscopeModel.regionAngle
 
         let items = kaleidoscopeModel.items
 
-        drawCircleAt(viewCenter, radius: viewRadius, strokeColor: UIColor.blackColor())
-        if N > 1 { drawRadialLines(numLines: N, centerPoint: viewCenter, radius: viewRadius, angle: regionAngle) }
+        drawCircleAt(worldCenter, radius: worldRadius, strokeColor: UIColor.blackColor())
+        if N > 1 { drawRadialLines(numLines: N, centerPoint: worldCenter, radius: worldRadius, angle: regionAngle) }
+
+        let path = kaleidoscopeModel.regionBoundaryPath()
+        UIColor.blueColor().setStroke()
+        path.stroke()
+        UIColor.redColor().colorWithAlphaComponent(0.1).setFill()
+        path.fill()
 
 //        let maxN = (N % 2 == 0 ? N : 2 * N)
         for item in items
@@ -50,7 +59,7 @@ class KaleidoscopeView: UIView
 //                if N > 1
 //                {
 //                    let theta_n = 2 * alpha_n - theta
-//                    let point = pointOffsetFromPointAtCenter(viewCenter, withRadius: r, andAngle: theta_n)
+//                    let point = pointOffsetFromPointAtCenter(worldCenter, withRadius: r, andAngle: theta_n)
 //                    let newItem = Item(center: point, r: r, theta: theta_n)
 //                    newItem.color = item.color
 //                    newItem.isCircle = item.isCircle
@@ -102,10 +111,10 @@ extension KaleidoscopeView
     }
 
     private func fillDotCenteredAtPoint(item: Item)
-    { drawCircleAt(x: item.center.x, y: item.center.y, radius: item.r, strokeColor: nil, fillColor: item.color) }
+    { drawCircleAt(x: item.center.x, y: item.center.y, radius: Item.SIZE/2, strokeColor: nil, fillColor: item.color) }
 
     private func fillSquareCenteredAtPoint(item: Item)
-    { drawSquareAt(item.center, size: 2*item.r, strokeColor: nil, fillColor: item.color) }
+    { drawSquareAt(item.center, size: Item.SIZE, strokeColor: nil, fillColor: item.color) }
 
     private func drawSquareAt(p: CGPoint, size: CGFloat, strokeColor: UIColor? = nil, fillColor: UIColor? = nil)
     { drawSquareAt(x: p.x, y: p.y, size: size, strokeColor: strokeColor, fillColor: fillColor) }

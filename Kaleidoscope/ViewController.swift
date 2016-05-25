@@ -34,9 +34,9 @@ class ViewController: UIViewController
         kaleidoscopeModel = KaleidoscopeModel()
     }
 
-    override func viewWillAppear(animated: Bool)
+    override func viewDidAppear(animated: Bool)
     {
-        super.viewWillAppear(animated)
+        super.viewDidAppear(animated)
 
         let viewCenter = kaleidoscopeView.viewCenter
         kaleidoscopeModel.worldCenter = viewCenter
