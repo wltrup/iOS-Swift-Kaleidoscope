@@ -8,6 +8,14 @@
 
 import UIKit
 
+
+struct ViewModel
+{
+    let numRegions: Int
+    let numItemsPerRegion: Int
+}
+
+
 class ViewController: UIViewController
 {
     private var kaleidoscopeModel: KaleidoscopeModel! {
@@ -38,19 +46,20 @@ class ViewController: UIViewController
 
         let numRegions = kaleidoscopeModel.numRegions
         let numItemsPerRegion = kaleidoscopeModel.numItemsPerRegion
-        let controlViewModel = ControlViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion)
-        controlView.updateWithViewModel(controlViewModel)
+        let viewModel = ViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion)
+
+        controlView.updateWithViewModel(viewModel)
+        kaleidoscopeView.kaleidoscopeModel = kaleidoscopeModel
     }
 }
+
 
 extension ViewController: KaleidoscopeModelDelegate
 {
     func kaleidoscopeModelDidUpdate(model: KaleidoscopeModel)
-    {
-        // XXX
-        kaleidoscopeView?.setNeedsDisplay()
-    }
+    { kaleidoscopeView?.setNeedsDisplay() }
 }
+
 
 extension ViewController: ControlViewDelegate
 {

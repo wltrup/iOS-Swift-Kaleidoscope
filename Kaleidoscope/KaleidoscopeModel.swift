@@ -8,11 +8,13 @@
 
 import UIKit
 
+
 @objc
 protocol KaleidoscopeModelDelegate
 {
     func kaleidoscopeModelDidUpdate(model: KaleidoscopeModel)
 }
+
 
 class KaleidoscopeModel: NSObject
 {
@@ -24,10 +26,10 @@ class KaleidoscopeModel: NSObject
     var numRegions:        Int = 4 { didSet { resetState() } }
     var numItemsPerRegion: Int = 5 { didSet { resetState() } }
 
-    private var regionAngle: CGFloat!
+    private(set) var regionAngle: CGFloat!
 
+    private(set) var items = [Item]()
     private let dynamicAnimator = UIDynamicAnimator()
-    private var items = [Item]()
 
     private func resetState()
     {
@@ -65,13 +67,12 @@ class KaleidoscopeModel: NSObject
             rs.append(r)
         }
 
+        items = []
         let pairs = zip(rs, thetas)
         for (r, theta) in pairs
         {
-            let x = worldCenter.x + r * cos(theta)
-            let y = worldCenter.y - r * sin(theta)
-            let center = CGPoint(x: x, y: y)
-            let item = Item(center: center)
+            let item = Item(worldCenter: worldCenter, r: r, theta: theta)
+            item.delegate = self
             items.append(item)
         }
     }
@@ -114,23 +115,57 @@ class KaleidoscopeModel: NSObject
 }
 
 
+extension KaleidoscopeModel: ItemDelegate
+{
+    func itemDidUpdate(item: Item)
+    { delegate?.kaleidoscopeModelDidUpdate(self) }
+}
+
+
+@objc
+protocol ItemDelegate
+{
+    func itemDidUpdate(item: Item)
+}
+
+
 class Item: NSObject, UIDynamicItem
 {
     static let SIZE: CGFloat = 20
+    weak var delegate: ItemDelegate?
 
     var isCircle = true
     var color = UIColor.blackColor()
 
-    var center: CGPoint
     var transform: CGAffineTransform = CGAffineTransformIdentity
+    var center: CGPoint { didSet { delegate?.itemDidUpdate(self) } }
 
     var bounds: CGRect { return CGRect(x: 0, y: 0, width: Item.SIZE, height: Item.SIZE) }
 
-    init(center: CGPoint)
+    var r: CGFloat
     {
+        let dx = center.x - worldCenter.x
+        let dy = center.y - worldCenter.y
+        return sqrt(dx * dx + dy * dy)
+    }
+
+    var theta: CGFloat
+    {
+        let dx = center.x - worldCenter.x
+        let dy = center.y - worldCenter.y
+        return atan2(dy, dx)
+    }
+
+    let worldCenter: CGPoint
+
+    init(worldCenter: CGPoint, r: CGFloat, theta: CGFloat)
+    {
+        self.worldCenter = worldCenter
         self.isCircle = CGFloat.randomBool
         self.color = UIColor.randomColor()
-        self.center = center
+        let x = worldCenter.x + r * cos(theta)
+        let y = worldCenter.y - r * sin(theta)
+        self.center = CGPoint(x: x, y: y)
         super.init()
     }
 

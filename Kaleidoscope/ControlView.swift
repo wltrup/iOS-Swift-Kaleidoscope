@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 @objc
 protocol ControlViewDelegate
 {
@@ -16,18 +17,11 @@ protocol ControlViewDelegate
 }
 
 
-struct ControlViewModel
-{
-    let numRegions: Int
-    let numItemsPerRegion: Int
-}
-
-
 class ControlView: UIView
 {
     weak var delegate: ControlViewDelegate?
 
-    func updateWithViewModel(viewModel: ControlViewModel)
+    func updateWithViewModel(viewModel: ViewModel)
     {
         let numRegions = viewModel.numRegions
         numRegionsLabel?.text = "\(numRegions)"
@@ -48,7 +42,7 @@ class ControlView: UIView
     {
         let numRegions = Int(numRegionsStepper.value)
         let numItemsPerRegion = Int(numItemsStepper.value)
-        let viewModel = ControlViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion)
+        let viewModel = ViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion)
         updateWithViewModel(viewModel)
 
         switch sender
