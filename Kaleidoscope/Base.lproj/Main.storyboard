@@ -34,7 +34,7 @@
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="fOC-Fa-6vB"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="3mt-3W-Dkq" kind="embed" id="1jC-6A-4iK"/>
+                                    <segue destination="3mt-3W-Dkq" kind="embed" identifier="EmbedControls" id="1jC-6A-4iK"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -42,7 +42,7 @@
                         <constraints>
                             <constraint firstItem="kkZ-QW-whb" firstAttribute="top" secondItem="0JR-ek-eob" secondAttribute="bottom" constant="5" id="05H-qJ-mUj"/>
                             <constraint firstItem="0JR-ek-eob" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="9jC-aQ-ZNC"/>
-                            <constraint firstItem="0JR-ek-eob" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" priority="900" id="CEb-41-nEU"/>
+                            <constraint firstItem="0JR-ek-eob" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" priority="900" constant="5" id="CEb-41-nEU"/>
                             <constraint firstItem="0JR-ek-eob" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="K4Q-CA-dTs"/>
                             <constraint firstAttribute="trailing" secondItem="kkZ-QW-whb" secondAttribute="trailing" id="aFY-cA-yEH"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="kkZ-QW-whb" secondAttribute="bottom" id="ckB-Mn-VZr"/>
@@ -57,10 +57,10 @@
             </objects>
             <point key="canvasLocation" x="-408" y="339"/>
         </scene>
-        <!--Control View Controller-->
+        <!--Controls View Controller-->
         <scene sceneID="bq8-Y5-W4P">
             <objects>
-                <tableViewController id="3mt-3W-Dkq" customClass="ControlViewController" customModule="Kaleidoscope" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="3mt-3W-Dkq" customClass="ControlsViewController" customModule="Kaleidoscope" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" indicatorStyle="white" bouncesZoom="NO" dataMode="static" style="plain" separatorStyle="none" allowsSelection="NO" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="EtA-3o-d7X">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -90,6 +90,9 @@
                                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="onTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="thumbTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <connections>
+                                                                <action selector="switchValueChanged:" destination="3mt-3W-Dkq" eventType="valueChanged" id="tMq-Xv-z0X"/>
+                                                            </connections>
                                                         </switch>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -124,22 +127,25 @@
                                                 <view contentMode="scaleToFill" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="zpw-QH-6Gf">
                                                     <rect key="frame" x="75" y="0.0" width="450" height="39"/>
                                                     <subviews>
-                                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="JaO-re-ZXz">
-                                                            <rect key="frame" x="346" y="5" width="94" height="29"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </stepper>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="18" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozr-gX-jI2">
-                                                            <rect key="frame" x="322" y="11" width="16" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Number of regions" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DDY-OZ-HFi">
                                                             <rect key="frame" x="10" y="11" width="128" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="18" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozr-gX-jI2">
+                                                            <rect key="frame" x="322" y="11" width="16" height="18"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="JaO-re-ZXz">
+                                                            <rect key="frame" x="346" y="5" width="94" height="29"/>
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <connections>
+                                                                <action selector="stepperValueChanged:" destination="3mt-3W-Dkq" eventType="valueChanged" id="dec-5s-OQu"/>
+                                                            </connections>
+                                                        </stepper>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -175,22 +181,25 @@
                                                 <view contentMode="scaleToFill" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="FQf-nU-bnw">
                                                     <rect key="frame" x="75" y="0.0" width="450" height="39"/>
                                                     <subviews>
-                                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="rBj-4p-ksT">
-                                                            <rect key="frame" x="346" y="5" width="94" height="29"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </stepper>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="18" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gOu-Qb-bKV">
-                                                            <rect key="frame" x="322" y="11" width="16" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Number of items" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YK7-ZE-2JB">
                                                             <rect key="frame" x="10" y="11" width="115" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="18" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gOu-Qb-bKV">
+                                                            <rect key="frame" x="322" y="11" width="16" height="18"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="rBj-4p-ksT">
+                                                            <rect key="frame" x="346" y="5" width="94" height="29"/>
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <connections>
+                                                                <action selector="stepperValueChanged:" destination="3mt-3W-Dkq" eventType="valueChanged" id="1u8-7D-epU"/>
+                                                            </connections>
+                                                        </stepper>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -226,14 +235,14 @@
                                                 <view contentMode="scaleToFill" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="KcE-It-Bhi">
                                                     <rect key="frame" x="75" y="0.0" width="450" height="66"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="18" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="us9-iU-GYW">
-                                                            <rect key="frame" x="424" y="5" width="16" height="18"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Item size" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zw2-Ts-htI">
+                                                            <rect key="frame" x="10" y="5" width="62" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Item size" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zw2-Ts-htI">
-                                                            <rect key="frame" x="10" y="5" width="62" height="18"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="18" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="us9-iU-GYW">
+                                                            <rect key="frame" x="424" y="5" width="16" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -244,6 +253,9 @@
                                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="maximumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="thumbTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <connections>
+                                                                <action selector="sliderValueChanged:" destination="3mt-3W-Dkq" eventType="valueChanged" id="Pp4-BO-5PH"/>
+                                                            </connections>
                                                         </slider>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -281,14 +293,14 @@
                                                 <view contentMode="scaleToFill" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="VlC-na-Jat">
                                                     <rect key="frame" x="75" y="0.0" width="450" height="66"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="18" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLb-0J-4Pc">
-                                                            <rect key="frame" x="424" y="5" width="16" height="18"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Item elasticity" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="asx-TS-0xN">
+                                                            <rect key="frame" x="10" y="5" width="95" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Item elasticity" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="asx-TS-0xN">
-                                                            <rect key="frame" x="10" y="5" width="95" height="18"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="18" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLb-0J-4Pc">
+                                                            <rect key="frame" x="424" y="5" width="16" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -299,6 +311,9 @@
                                                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="maximumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                             <color key="thumbTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <connections>
+                                                                <action selector="sliderValueChanged:" destination="3mt-3W-Dkq" eventType="valueChanged" id="OkW-3s-YaL"/>
+                                                            </connections>
                                                         </slider>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -334,6 +349,17 @@
                             <outlet property="delegate" destination="3mt-3W-Dkq" id="jCr-Lu-fQr"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="itemElasticityLabel" destination="CLb-0J-4Pc" id="6bp-Kv-uJD"/>
+                        <outlet property="itemElasticitySlider" destination="fr1-F9-Wnr" id="wYq-Po-gvE"/>
+                        <outlet property="itemSizeLabel" destination="us9-iU-GYW" id="R8M-RH-sGA"/>
+                        <outlet property="itemSizeSlider" destination="9VW-5W-tqJ" id="4TU-Xq-C2w"/>
+                        <outlet property="numItemsPerRegionLabel" destination="gOu-Qb-bKV" id="99w-KX-8Bu"/>
+                        <outlet property="numItemsPerRegionStepper" destination="rBj-4p-ksT" id="kwo-cO-bfi"/>
+                        <outlet property="numRegionsLabel" destination="ozr-gX-jI2" id="zH0-1h-0Eg"/>
+                        <outlet property="numRegionsStepper" destination="JaO-re-ZXz" id="gJx-nW-vm1"/>
+                        <outlet property="showRegionsSwitch" destination="5NY-ME-9ON" id="NI0-bN-7G6"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wsB-fB-R57" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -9,24 +9,6 @@
 import UIKit
 
 
-struct ValueInRange<T: Comparable>
-{
-    let min: T
-    let max: T
-    let cur: T
-
-    init(min: T, max: T, cur: T)
-    {
-        guard min <= cur && cur <= max else
-        { fatalError("'(\(min), \(cur), \(max))' do not satisfy \(min) ≤ \(cur) ≤ \(max)") }
-
-        self.min = min
-        self.max = max
-        self.cur = cur
-    }
-}
-
-
 @objc
 protocol ControlsViewControllerDelegate
 {
@@ -40,33 +22,6 @@ protocol ControlsViewControllerDelegate
 
 class ControlsViewController: UITableViewController
 {
-    weak var delegate: ControlsViewControllerDelegate?
-    var viewModel: ViewModel!
-
-    struct ViewModel
-    {
-        let showRegions:       Bool
-        let numRegions:        ValueInRange<Int>
-        let numItemsPerRegion: ValueInRange<Int>
-        let itemSize:          ValueInRange<CGFloat>
-        let itemElasticity:    ValueInRange<CGFloat>
-    }
-
-    override func viewWillAppear(animated: Bool)
-    {
-        super.viewWillAppear(animated)
-        updateUI()
-    }
-
-    private static var itemElasticityNumberFormatter: NSNumberFormatter
-    {
-        let formatter = NSNumberFormatter()
-        formatter.minimumIntegerDigits = 1
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }
-
     @IBOutlet private weak var numRegionsLabel:          UILabel!
     @IBOutlet private weak var numItemsPerRegionLabel:   UILabel!
     @IBOutlet private weak var itemSizeLabel:            UILabel!
@@ -76,6 +31,33 @@ class ControlsViewController: UITableViewController
     @IBOutlet private weak var itemSizeSlider:           UISlider!
     @IBOutlet private weak var itemElasticitySlider:     UISlider!
     @IBOutlet private weak var showRegionsSwitch:        UISwitch!
+
+    weak var delegate: ControlsViewControllerDelegate?
+
+    var viewModel: ViewModel!
+    struct ViewModel
+    {
+        let showRegions:       Bool
+        let numRegions:        ValueInRange<Int>
+        let numItemsPerRegion: ValueInRange<Int>
+        let itemSize:          ValueInRange<CGFloat>
+        let itemElasticity:    ValueInRange<CGFloat>
+
+        static var itemElasticityNumberFormatter: NSNumberFormatter
+        {
+            let formatter = NSNumberFormatter()
+            formatter.minimumIntegerDigits = 1
+            formatter.minimumFractionDigits = 2
+            formatter.maximumFractionDigits = 2
+            return formatter
+        }
+    }
+
+    override func viewWillAppear(animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        updateUI()
+    }
 }
 
 
@@ -83,7 +65,7 @@ extension ControlsViewController
 {
     private func updateUI()
     {
-        guard viewModel != nil else { fatalError("ControlsViewController view model not set") }
+        guard viewModel != nil else { fatalError("ControlsViewController: view model not set") }
 
         let showRegions = viewModel.showRegions
         showRegionsSwitch.on = showRegions
@@ -107,8 +89,7 @@ extension ControlsViewController
         itemSizeSlider.value = Float(itemSize.cur)
 
         let itemElasticity = viewModel.itemElasticity
-        itemElasticityLabel.text =
-            ControlsViewController.itemElasticityNumberFormatter.stringFromNumber(itemElasticity.cur)
+        itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.stringFromNumber(itemElasticity.cur)
         itemElasticitySlider.minimumValue = Float(itemElasticity.min)
         itemElasticitySlider.maximumValue = Float(itemElasticity.max)
         itemElasticitySlider.value = Float(itemElasticity.cur)
@@ -142,8 +123,7 @@ extension ControlsViewController
             delegate?.itemSizeDidChangeTo(itemSize)
         case itemElasticitySlider:
             let itemElasticity = CGFloat(itemElasticitySlider.value)
-            itemElasticityLabel.text =
-                ControlsViewController.itemElasticityNumberFormatter.stringFromNumber(itemElasticity)
+            itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.stringFromNumber(itemElasticity)
             delegate?.itemElasticityDidChangeTo(itemElasticity)
         default:
             fatalError("Unhandled sender in call to sliderValueChanged(:)")

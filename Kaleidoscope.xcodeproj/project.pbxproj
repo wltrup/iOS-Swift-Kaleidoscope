@@ -14,9 +14,11 @@
 		3B7A01351CF3ECFA00543C90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B7A01331CF3ECFA00543C90 /* LaunchScreen.storyboard */; };
 		3B7A013D1CF3EE5F00543C90 /* KaleidoscopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A013C1CF3EE5F00543C90 /* KaleidoscopeView.swift */; };
 		3B7A013F1CF4044500543C90 /* ControlsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A013E1CF4044500543C90 /* ControlsViewController.swift */; };
-		3B7A01411CF4116700543C90 /* KaleidoscopeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A01401CF4116700543C90 /* KaleidoscopeModel.swift */; };
-		3B7A01431CF41CE500543C90 /* CGFloat+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A01421CF41CE500543C90 /* CGFloat+extensions.swift */; };
-		3B7A01451CF4ADD500543C90 /* UIColor+RandomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A01441CF4ADD500543C90 /* UIColor+RandomColor.swift */; };
+		3B7A01411CF4116700543C90 /* KaleidoscopeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7A01401CF4116700543C90 /* KaleidoscopeEngine.swift */; };
+		3B983A621CF6649500E98472 /* CGFloat+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B983A5F1CF6649500E98472 /* CGFloat+extensions.swift */; };
+		3B983A631CF6649500E98472 /* UIColor+RandomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B983A601CF6649500E98472 /* UIColor+RandomColor.swift */; };
+		3B983A641CF6649500E98472 /* UIViewController+SegueIdentifierAware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B983A611CF6649500E98472 /* UIViewController+SegueIdentifierAware.swift */; };
+		3B983A661CF67AE100E98472 /* ValueInRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B983A651CF67AE100E98472 /* ValueInRange.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,9 +31,11 @@
 		3B7A01361CF3ECFA00543C90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B7A013C1CF3EE5F00543C90 /* KaleidoscopeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KaleidoscopeView.swift; sourceTree = "<group>"; };
 		3B7A013E1CF4044500543C90 /* ControlsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlsViewController.swift; sourceTree = "<group>"; };
-		3B7A01401CF4116700543C90 /* KaleidoscopeModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KaleidoscopeModel.swift; sourceTree = "<group>"; };
-		3B7A01421CF41CE500543C90 /* CGFloat+extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+extensions.swift"; sourceTree = "<group>"; };
-		3B7A01441CF4ADD500543C90 /* UIColor+RandomColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+RandomColor.swift"; sourceTree = "<group>"; };
+		3B7A01401CF4116700543C90 /* KaleidoscopeEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KaleidoscopeEngine.swift; sourceTree = "<group>"; };
+		3B983A5F1CF6649500E98472 /* CGFloat+extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+extensions.swift"; sourceTree = "<group>"; };
+		3B983A601CF6649500E98472 /* UIColor+RandomColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+RandomColor.swift"; sourceTree = "<group>"; };
+		3B983A611CF6649500E98472 /* UIViewController+SegueIdentifierAware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+SegueIdentifierAware.swift"; sourceTree = "<group>"; };
+		3B983A651CF67AE100E98472 /* ValueInRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueInRange.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,16 +71,26 @@
 				3B7A012A1CF3ECFA00543C90 /* AppDelegate.swift */,
 				3B7A012C1CF3ECFA00543C90 /* MainViewController.swift */,
 				3B7A013E1CF4044500543C90 /* ControlsViewController.swift */,
-				3B7A01401CF4116700543C90 /* KaleidoscopeModel.swift */,
 				3B7A013C1CF3EE5F00543C90 /* KaleidoscopeView.swift */,
-				3B7A01421CF41CE500543C90 /* CGFloat+extensions.swift */,
-				3B7A01441CF4ADD500543C90 /* UIColor+RandomColor.swift */,
+				3B7A01401CF4116700543C90 /* KaleidoscopeEngine.swift */,
+				3B983A651CF67AE100E98472 /* ValueInRange.swift */,
+				3B983A5E1CF6649500E98472 /* Extensions */,
 				3B7A012E1CF3ECFA00543C90 /* Main.storyboard */,
 				3B7A01311CF3ECFA00543C90 /* Assets.xcassets */,
 				3B7A01331CF3ECFA00543C90 /* LaunchScreen.storyboard */,
 				3B7A01361CF3ECFA00543C90 /* Info.plist */,
 			);
 			path = Kaleidoscope;
+			sourceTree = "<group>";
+		};
+		3B983A5E1CF6649500E98472 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3B983A5F1CF6649500E98472 /* CGFloat+extensions.swift */,
+				3B983A601CF6649500E98472 /* UIColor+RandomColor.swift */,
+				3B983A611CF6649500E98472 /* UIViewController+SegueIdentifierAware.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,12 +164,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B7A01411CF4116700543C90 /* KaleidoscopeModel.swift in Sources */,
+				3B7A01411CF4116700543C90 /* KaleidoscopeEngine.swift in Sources */,
 				3B7A013F1CF4044500543C90 /* ControlsViewController.swift in Sources */,
-				3B7A01451CF4ADD500543C90 /* UIColor+RandomColor.swift in Sources */,
-				3B7A01431CF41CE500543C90 /* CGFloat+extensions.swift in Sources */,
+				3B983A641CF6649500E98472 /* UIViewController+SegueIdentifierAware.swift in Sources */,
 				3B7A012D1CF3ECFA00543C90 /* MainViewController.swift in Sources */,
+				3B983A661CF67AE100E98472 /* ValueInRange.swift in Sources */,
 				3B7A012B1CF3ECFA00543C90 /* AppDelegate.swift in Sources */,
+				3B983A621CF6649500E98472 /* CGFloat+extensions.swift in Sources */,
+				3B983A631CF6649500E98472 /* UIColor+RandomColor.swift in Sources */,
 				3B7A013D1CF3EE5F00543C90 /* KaleidoscopeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,81 +9,130 @@
 import UIKit
 
 
-struct ViewModel
-{
-    let numRegions: Int
-    let numItemsPerRegion: Int
-    let itemSize: CGFloat
-    let showRegions: Bool
-}
-
-
 class MainViewController: UIViewController
 {
-    private var kaleidoscopeModel: KaleidoscopeModel! {
-        didSet { kaleidoscopeModel.delegate = self }
+    @IBOutlet private weak var kaleidoscopeView: KaleidoscopeView!
+
+    private var controlsViewController: ControlsViewController! {
+        didSet { controlsViewController?.delegate = self }
     }
 
-//    @IBOutlet private weak var controlView: ControlView! {
-//        didSet { controlView.delegate = self }
-//    }
-
-    @IBOutlet private weak var kaleidoscopeView: KaleidoscopeView!
+    private var kaleidoscopeEngine: KaleidoscopeEngine! {
+        didSet { kaleidoscopeEngine?.delegate = self }
+    }
 
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        kaleidoscopeModel = KaleidoscopeModel()
+        initialiseKaleidoscopeEngine()
+    }
+
+    override func viewWillAppear(animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        initialiseControls()
     }
 
     override func viewDidAppear(animated: Bool)
     {
         super.viewDidAppear(animated)
+        updateKaleidoscopeEngineGeometry()
+        kaleidoscopeEngine?.start()
+    }
+
+    override func viewWillDisappear(animated: Bool)
+    {
+        kaleidoscopeEngine?.stop()
+        super.viewWillDisappear(animated)
+    }
+}
+
+
+extension MainViewController
+{
+    private func initialiseKaleidoscopeEngine()
+    {
+        kaleidoscopeEngine = KaleidoscopeEngine()
+
+        // Configure initial engine values here, if desired.
+    }
+
+    private func initialiseControls()
+    {
+        guard kaleidoscopeEngine != nil else { fatalError("MainViewController: kaleidoscopeEngine not set") }
+        guard controlsViewController != nil else { fatalError("MainViewController: controlsViewController not set") }
+        
+        let numRegions = kaleidoscopeEngine.configuration.numRegions
+        let numItemsPerRegion = kaleidoscopeEngine.configuration.numItemsPerRegion
+        let itemSize = kaleidoscopeEngine.configuration.itemSize
+        let itemElasticity = kaleidoscopeEngine.configuration.itemElasticity
+
+        let controlsViewModel = ControlsViewController.ViewModel(
+            showRegions: false,
+            numRegions: ValueInRange<Int>(min: 1, max: 20, cur: numRegions),
+            numItemsPerRegion: ValueInRange<Int>(min: 1, max: 25, cur: numItemsPerRegion),
+            itemSize: ValueInRange<CGFloat>(min: 5, max: 25, cur: itemSize),
+            itemElasticity: ValueInRange<CGFloat>(min: 0.9, max: 1.1, cur: itemElasticity)
+        )
+        controlsViewController.viewModel = controlsViewModel
+    }
+
+    private func updateKaleidoscopeEngineGeometry()
+    {
+        guard kaleidoscopeView != nil else { fatalError("MainViewController: kaleidoscopeView not set") }
+        guard kaleidoscopeEngine != nil else { fatalError("MainViewController: kaleidoscopeEngine not set") }
 
         let viewCenter = kaleidoscopeView.viewCenter
-        kaleidoscopeModel.worldCenter = viewCenter
+        kaleidoscopeEngine.worldCenter = viewCenter
 
         let viewRadius = kaleidoscopeView.viewRadius
-        kaleidoscopeModel.worldRadius = viewRadius
-
-//        let numRegions = kaleidoscopeModel.numRegions
-//        let numItemsPerRegion = kaleidoscopeModel.numItemsPerRegion
-//        let itemSize = Item.size
-//        let showRegions = kaleidoscopeView.showRegions
-
-//        let viewModel = ViewModel(numRegions: numRegions, numItemsPerRegion: numItemsPerRegion,
-//                                  itemSize: itemSize, showRegions: showRegions)
-
-//        controlView.updateWithViewModel(viewModel)
-        kaleidoscopeView.kaleidoscopeModel = kaleidoscopeModel
+        kaleidoscopeEngine.worldRadius = viewRadius
     }
 }
 
 
-extension MainViewController: KaleidoscopeModelDelegate
+extension MainViewController: SegueIdentifierAware
 {
-    func kaleidoscopeModelDidUpdate(model: KaleidoscopeModel)
+    enum SegueIdentifier: String
+    {
+        case EmbedControls
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
+        let segueID = segueIdentifierForSegue(segue)
+        switch segueID
+        {
+        case .EmbedControls:
+            if let controlsViewController = segue.destinationViewController as? ControlsViewController
+            { self.controlsViewController = controlsViewController }
+            else { fatalError("invalid destination view controller for segue identifier '\(segueID)'") }
+        }
+    }
+}
+
+
+extension MainViewController: ControlsViewControllerDelegate
+{
+    func showRegionsDidChangeTo(showRegions: Bool)
     { kaleidoscopeView?.setNeedsDisplay() }
+
+    func numRegionsDidChangeTo(numRegions: Int)
+    { kaleidoscopeEngine?.configuration.numRegions = numRegions }
+
+    func numItemsPerRegionsDidChangeTo(numItemsPerRegion: Int)
+    { kaleidoscopeEngine?.configuration.numItemsPerRegion = numItemsPerRegion }
+
+    func itemSizeDidChangeTo(itemSize: CGFloat)
+    { kaleidoscopeEngine?.configuration.itemSize = itemSize }
+
+    func itemElasticityDidChangeTo(itemElasticity: CGFloat)
+    { kaleidoscopeEngine?.configuration.itemElasticity = itemElasticity }
 }
 
 
-extension MainViewController: ControlViewDelegate
+extension MainViewController: KaleidoscopeEngineDelegate
 {
-    func controlViewDidChangeNumRegionsTo(numRegions: Int)
-    { kaleidoscopeModel.numRegions = numRegions }
-
-    func controlViewDidChangeNumItemsPerRegionsTo(numItemsPerRegion: Int)
-    { kaleidoscopeModel.numItemsPerRegion = numItemsPerRegion }
-
-    func controlViewDidChangeItemSizeTo(itemSize: CGFloat)
-    {
-        Item.size = itemSize
-        kaleidoscopeView?.setNeedsDisplay()
-    }
-
-    func controlViewDidChangeShowRegionsTo(showRegions: Bool)
-    {
-        kaleidoscopeView.showRegions = showRegions
-        kaleidoscopeView?.setNeedsDisplay()
-    }
+    func kaleidoscopeEngineDidUpdateState()
+    { kaleidoscopeView?.setNeedsDisplay() }
 }
