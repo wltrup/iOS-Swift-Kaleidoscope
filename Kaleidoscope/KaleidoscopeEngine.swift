@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreMotion
 
 private let TWO_PI = CGFloat(2*M_PI)
 
@@ -22,8 +23,11 @@ class KaleidoscopeEngine: NSObject
 {
     weak var delegate: KaleidoscopeEngineDelegate?
 
-    var worldCenter: CGPoint! { didSet { resetState() } }
-    var worldRadius: CGFloat! { didSet { resetState() } }
+    var worldCenter: CGPoint!
+        { didSet { resetState() } }
+
+    var worldRadius: CGFloat!
+        { didSet { resetState() } }
 
     struct Configuration
     {
@@ -50,13 +54,35 @@ class KaleidoscopeEngine: NSObject
 
     private var dynamicAnimator = UIDynamicAnimator()
     private var dynamicItemBehavior: UIDynamicItemBehavior!
+    private var gravityBehavior: UIGravityBehavior!
+
     private var timeOfLastDelegateUpdate: NSTimeInterval = 0
+    private static let motionManager = CMMotionManager()
 
     func start()
-    { startDynamicAnimator() }
+    {
+        let motionManager = KaleidoscopeEngine.motionManager
+        if motionManager.accelerometerAvailable
+        {
+            motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue())
+            {
+                [weak self] (data, error) in
+                guard error == nil else { return }
+                if let myself = self, data = data
+                {
+                    myself.gravityBehavior?.gravityDirection =
+                        CGVector(dx: data.acceleration.x, dy: -data.acceleration.y)
+                }
+            }
+        }
+        startDynamicAnimator()
+    }
 
     func stop()
-    { stopDynamicAnimator() }
+    {
+        stopDynamicAnimator()
+        KaleidoscopeEngine.motionManager.stopAccelerometerUpdates()
+    }
     
     func regionBoundaryPath() -> UIBezierPath?
     {
@@ -151,14 +177,12 @@ extension KaleidoscopeEngine
         dynamicItemBehavior.elasticity = configuration.itemElasticity
         dynamicAnimator.addBehavior(dynamicItemBehavior)
 
+        let collisionBehavior = UICollisionBehavior(items: items)
         if let path = regionBoundaryPath()
-        {
-            let collisionBehavior = UICollisionBehavior(items: items)
-            collisionBehavior.addBoundaryWithIdentifier("region boundary", forPath: path)
-            dynamicAnimator.addBehavior(collisionBehavior)
-        }
+        { collisionBehavior.addBoundaryWithIdentifier("region boundary", forPath: path) }
+        dynamicAnimator.addBehavior(collisionBehavior)
 
-        let gravityBehavior = UIGravityBehavior(items: items)
+        gravityBehavior = UIGravityBehavior(items: items)
         dynamicAnimator.addBehavior(gravityBehavior)
     }
 
@@ -166,6 +190,7 @@ extension KaleidoscopeEngine
     {
         dynamicAnimator.removeAllBehaviors()
         dynamicItemBehavior = nil
+        gravityBehavior = nil
     }
 }
 
@@ -206,8 +231,11 @@ class Item: NSObject, UIDynamicItem
     var transform: CGAffineTransform = CGAffineTransformIdentity
         { didSet { delegate?.itemStateDidChange() } }
 
-    var bounds: CGRect { return CGRect(x: 0, y: 0, width: size, height: size) }
-    var size: CGFloat { return (delegate != nil ? delegate!.itemSize() : 5) }
+    var bounds: CGRect
+    { return CGRect(x: 0, y: 0, width: size, height: size) }
+
+    var size: CGFloat
+    { return (delegate != nil ? delegate!.itemSize() : 5) }
 
     var collisionBoundsType: UIDynamicItemCollisionBoundsType
     { return .Ellipse }

@@ -11,13 +11,21 @@ import UIKit
 
 class KaleidoscopeView: UIView
 {
-    var items: [Item] = [] { didSet { setNeedsDisplay() } }
+    var items: [Item] = []
+        { didSet { setNeedsDisplay() } }
 
-    var showAllRegions = false { didSet { setNeedsDisplay() } }
-    var showRefRegion  = false { didSet { setNeedsDisplay() } }
+    var showAllRegions = false
+        { didSet { setNeedsDisplay() } }
 
-    var numRegions: Int! { didSet { setNeedsDisplay() } }
-    var regionAngle: CGFloat! { didSet { setNeedsDisplay() } }
+    var showRefRegion  = false
+        { didSet { setNeedsDisplay() } }
+
+    var numRegions: Int!
+        { didSet { setNeedsDisplay() } }
+
+    var regionAngle: CGFloat!
+        { didSet { setNeedsDisplay() } }
+
     var regionBoundaryPath: UIBezierPath?
 
     var viewRadius: CGFloat
@@ -28,7 +36,7 @@ class KaleidoscopeView: UIView
     }
 
     var viewCenter: CGPoint
-    { return CGPoint(x: CGRectGetMidX(bounds), y: CGRectGetMidY(bounds)) }
+    { return CGPoint(x: bounds.midX, y: bounds.midY) }
     
     override func drawRect(rect: CGRect)
     {
