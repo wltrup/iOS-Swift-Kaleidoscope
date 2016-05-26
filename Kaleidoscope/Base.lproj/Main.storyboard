@@ -79,8 +79,8 @@
                                                 <view contentMode="scaleToFill" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="UHo-zB-f30">
                                                     <rect key="frame" x="75" y="0.0" width="450" height="41"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Show regions" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eye-MI-GUg">
-                                                            <rect key="frame" x="10" y="12" width="93" height="18"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Show all regions" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eye-MI-GUg">
+                                                            <rect key="frame" x="10" y="12" width="112" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -94,15 +94,34 @@
                                                                 <action selector="switchValueChanged:" destination="3mt-3W-Dkq" eventType="valueChanged" id="tMq-Xv-z0X"/>
                                                             </connections>
                                                         </switch>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RbE-iJ-k3p">
+                                                            <rect key="frame" x="130" y="5" width="51" height="31"/>
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="onTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="thumbTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <connections>
+                                                                <action selector="switchValueChanged:" destination="3mt-3W-Dkq" eventType="valueChanged" id="zF7-Le-U37"/>
+                                                            </connections>
+                                                        </switch>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Show ref region" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAx-7N-MkW">
+                                                            <rect key="frame" x="275" y="12" width="108" height="18"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
+                                                        <constraint firstItem="RbE-iJ-k3p" firstAttribute="leading" secondItem="Eye-MI-GUg" secondAttribute="trailing" constant="8" symbolic="YES" id="CZ4-ZW-fuF"/>
+                                                        <constraint firstItem="GAx-7N-MkW" firstAttribute="centerY" secondItem="Eye-MI-GUg" secondAttribute="centerY" id="Hfp-mc-EVB"/>
                                                         <constraint firstAttribute="trailing" secondItem="5NY-ME-9ON" secondAttribute="trailing" constant="10" id="IQb-Ru-cKz"/>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" priority="950" constant="450" id="OXG-gA-yhM"/>
                                                         <constraint firstItem="Eye-MI-GUg" firstAttribute="leading" secondItem="UHo-zB-f30" secondAttribute="leading" constant="10" id="UUp-Ky-xl1"/>
                                                         <constraint firstItem="5NY-ME-9ON" firstAttribute="top" secondItem="UHo-zB-f30" secondAttribute="top" constant="5" id="WMG-3j-fKg"/>
                                                         <constraint firstAttribute="bottom" secondItem="5NY-ME-9ON" secondAttribute="bottom" constant="5" id="dlC-co-uG3"/>
-                                                        <constraint firstItem="5NY-ME-9ON" firstAttribute="centerY" secondItem="Eye-MI-GUg" secondAttribute="centerY" id="dzb-2K-dte"/>
+                                                        <constraint firstItem="5NY-ME-9ON" firstAttribute="leading" secondItem="GAx-7N-MkW" secondAttribute="trailing" constant="8" symbolic="YES" id="hid-Fp-NlF"/>
+                                                        <constraint firstItem="5NY-ME-9ON" firstAttribute="centerY" secondItem="Eye-MI-GUg" secondAttribute="centerY" id="nMe-Xo-Tne"/>
+                                                        <constraint firstItem="RbE-iJ-k3p" firstAttribute="centerY" secondItem="Eye-MI-GUg" secondAttribute="centerY" id="vPp-hP-9wV"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -358,7 +377,8 @@
                         <outlet property="numItemsPerRegionStepper" destination="rBj-4p-ksT" id="kwo-cO-bfi"/>
                         <outlet property="numRegionsLabel" destination="ozr-gX-jI2" id="zH0-1h-0Eg"/>
                         <outlet property="numRegionsStepper" destination="JaO-re-ZXz" id="gJx-nW-vm1"/>
-                        <outlet property="showRegionsSwitch" destination="5NY-ME-9ON" id="NI0-bN-7G6"/>
+                        <outlet property="showAllRegionsSwitch" destination="RbE-iJ-k3p" id="emK-qn-3MK"/>
+                        <outlet property="showRefRegionSwitch" destination="5NY-ME-9ON" id="cnq-4Y-PFL"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wsB-fB-R57" userLabel="First Responder" sceneMemberID="firstResponder"/>

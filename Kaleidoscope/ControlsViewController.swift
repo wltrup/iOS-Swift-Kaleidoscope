@@ -12,7 +12,8 @@ import UIKit
 @objc
 protocol ControlsViewControllerDelegate
 {
-    func showRegionsDidChangeTo(showRegions: Bool)
+    func showAllRegionsDidChangeTo(showAllRegions: Bool)
+    func showRefRegionDidChangeTo(showRefRegion: Bool)
     func numRegionsDidChangeTo(numRegions: Int)
     func numItemsPerRegionsDidChangeTo(numItemsPerRegion: Int)
     func itemSizeDidChangeTo(itemSize: CGFloat)
@@ -30,14 +31,16 @@ class ControlsViewController: UITableViewController
     @IBOutlet private weak var numItemsPerRegionStepper: UIStepper!
     @IBOutlet private weak var itemSizeSlider:           UISlider!
     @IBOutlet private weak var itemElasticitySlider:     UISlider!
-    @IBOutlet private weak var showRegionsSwitch:        UISwitch!
+    @IBOutlet private weak var showAllRegionsSwitch:     UISwitch!
+    @IBOutlet private weak var showRefRegionSwitch:      UISwitch!
 
     weak var delegate: ControlsViewControllerDelegate?
 
     var viewModel: ViewModel!
     struct ViewModel
     {
-        let showRegions:       Bool
+        let showAllRegions:    Bool
+        let showRefRegion:     Bool
         let numRegions:        ValueInRange<Int>
         let numItemsPerRegion: ValueInRange<Int>
         let itemSize:          ValueInRange<CGFloat>
@@ -67,8 +70,11 @@ extension ControlsViewController
     {
         guard viewModel != nil else { fatalError("ControlsViewController: view model not set") }
 
-        let showRegions = viewModel.showRegions
-        showRegionsSwitch.on = showRegions
+        let showAllRegions = viewModel.showAllRegions
+        showAllRegionsSwitch.on = showAllRegions
+
+        let showRefRegion = viewModel.showRefRegion
+        showRefRegionSwitch.on = showRefRegion
 
         let numRegions = viewModel.numRegions
         numRegionsLabel.text = "\(numRegions.cur)"
@@ -135,9 +141,12 @@ extension ControlsViewController
     {
         switch sender
         {
-        case showRegionsSwitch:
-            let showRegions = showRegionsSwitch.on
-            delegate?.showRegionsDidChangeTo(showRegions)
+        case showAllRegionsSwitch:
+            let showAllRegions = showAllRegionsSwitch.on
+            delegate?.showAllRegionsDidChangeTo(showAllRegions)
+        case showRefRegionSwitch:
+            let showRefRegion = showRefRegionSwitch.on
+            delegate?.showRefRegionDidChangeTo(showRefRegion)
         default:
             fatalError("Unhandled sender in call to switchValueChanged(:)")
             break

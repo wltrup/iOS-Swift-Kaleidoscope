@@ -27,11 +27,12 @@ class KaleidoscopeEngine: NSObject
 
     struct Configuration
     {
-        var numRegions: Int = 3
-        var numItemsPerRegion: Int = 5
-        var itemSize: CGFloat = 5
-        var itemElasticity: CGFloat = 1.0
-        var delegateUpdateInterval: NSTimeInterval = 1.0/60.0 // 60 updates per second
+        var numRegions: Int = 6
+        var numItemsPerRegion: Int = 10
+        var itemSize: CGFloat = 15
+        var itemElasticity: CGFloat = 1.05
+        var delegateUpdateInterval: NSTimeInterval = 1.0/90.0 // 90 updates per second
+        var regionAngle: CGFloat { return TWO_PI / CGFloat(numRegions) }
     }
     var configuration = Configuration() {
         didSet
@@ -45,38 +46,48 @@ class KaleidoscopeEngine: NSObject
         }
     }
 
-    private var regionAngle: CGFloat!
-    private var items = [Item]()
+    private(set) var items = [Item]()
 
-    private var dynamicAnimator: UIDynamicAnimator!
+    private var dynamicAnimator = UIDynamicAnimator()
     private var dynamicItemBehavior: UIDynamicItemBehavior!
     private var timeOfLastDelegateUpdate: NSTimeInterval = 0
-
-    struct Data
-    {
-        let numRegions: Int
-        let numItemsPerRegion: Int
-        let worldCenter: CGPoint
-        let worldRadius: CGFloat
-        let regionAngle: CGFloat
-        let items = [Item]()
-    }
-    var dataForRendering: Data
-    {
-        return Data(
-            numRegions: configuration.numRegions,
-            numItemsPerRegion: configuration.numItemsPerRegion,
-            worldCenter: worldCenter,
-            worldRadius: worldRadius,
-            regionAngle: regionAngle
-        )
-    }
 
     func start()
     { startDynamicAnimator() }
 
     func stop()
     { stopDynamicAnimator() }
+    
+    func regionBoundaryPath() -> UIBezierPath?
+    {
+        guard worldCenter != nil && worldRadius != nil else { return nil }
+
+        let numRegions = configuration.numRegions
+        let regionAngle = configuration.regionAngle
+
+        if numRegions == 1
+        {
+            return UIBezierPath(arcCenter: worldCenter, radius: worldRadius,
+                                startAngle: 0, endAngle: regionAngle, clockwise: true)
+        }
+        else
+        {
+            let path = UIBezierPath()
+            path.moveToPoint(worldCenter)
+
+            let p = CGPoint(x: worldCenter.x + worldRadius * cos(regionAngle),
+                            y: worldCenter.y - worldRadius * sin(regionAngle))
+            path.addLineToPoint(p)
+
+            let startAngle = CGFloat(numRegions-1) * regionAngle
+            let   endAngle = CGFloat(numRegions)   * regionAngle
+            path.addArcWithCenter(worldCenter, radius: worldRadius,
+                                  startAngle: startAngle, endAngle: endAngle, clockwise: true)
+
+            path.addLineToPoint(worldCenter)
+            return path
+        }
+    }
 }
 
 
@@ -93,10 +104,7 @@ extension KaleidoscopeEngine
         assert(numItemsPerRegion > 0, "invalid number of items per region (\(numItemsPerRegion))")
 
         stopDynamicAnimator()
-
-        regionAngle = TWO_PI / CGFloat(numRegions)
         createItems()
-
         startDynamicAnimator()
     }
 
@@ -104,11 +112,11 @@ extension KaleidoscopeEngine
     {
         guard worldCenter != nil else { fatalError("worldCenter not set") }
         guard worldRadius != nil else { fatalError("worldRadius not set") }
-        guard regionAngle != nil else { fatalError("regionAngle not set") }
 
         let lambda: CGFloat = 0.25
         let oneMinusLambda = 1 - lambda
 
+        let regionAngle = configuration.regionAngle
         let minTheta = lambda * regionAngle
         let maxTheta = oneMinusLambda * regionAngle
         var thetas = [CGFloat]()
@@ -139,16 +147,16 @@ extension KaleidoscopeEngine
 
     private func startDynamicAnimator()
     {
-        dynamicAnimator = UIDynamicAnimator()
-
         dynamicItemBehavior = UIDynamicItemBehavior(items: items)
         dynamicItemBehavior.elasticity = configuration.itemElasticity
-        dynamicItemBehavior.allowsRotation = true
         dynamicAnimator.addBehavior(dynamicItemBehavior)
 
-        let collisionBehavior = UICollisionBehavior(items: items)
-        collisionBehavior.addBoundaryWithIdentifier("region boundary", forPath: regionBoundaryPath())
-        dynamicAnimator.addBehavior(collisionBehavior)
+        if let path = regionBoundaryPath()
+        {
+            let collisionBehavior = UICollisionBehavior(items: items)
+            collisionBehavior.addBoundaryWithIdentifier("region boundary", forPath: path)
+            dynamicAnimator.addBehavior(collisionBehavior)
+        }
 
         let gravityBehavior = UIGravityBehavior(items: items)
         dynamicAnimator.addBehavior(gravityBehavior)
@@ -156,40 +164,8 @@ extension KaleidoscopeEngine
 
     private func stopDynamicAnimator()
     {
-        if let animator = dynamicAnimator
-        {
-            animator.removeAllBehaviors()
-            dynamicItemBehavior = nil
-            dynamicAnimator = nil
-        }
-    }
-
-    private func regionBoundaryPath() -> UIBezierPath
-    {
-        let numRegions = configuration.numRegions
-
-        if numRegions == 1
-        {
-            return UIBezierPath(arcCenter: worldCenter, radius: worldRadius,
-                                startAngle: 0, endAngle: regionAngle, clockwise: true)
-        }
-        else
-        {
-            let path = UIBezierPath()
-            path.moveToPoint(worldCenter)
-
-            let p = CGPoint(x: worldCenter.x + worldRadius * cos(regionAngle),
-                            y: worldCenter.y - worldRadius * sin(regionAngle))
-            path.addLineToPoint(p)
-
-            let startAngle = CGFloat(numRegions-1) * regionAngle
-            let   endAngle = CGFloat(numRegions)   * regionAngle
-            path.addArcWithCenter(worldCenter, radius: worldRadius,
-                                  startAngle: startAngle, endAngle: endAngle, clockwise: true)
-
-            path.addLineToPoint(worldCenter)
-            return path
-        }
+        dynamicAnimator.removeAllBehaviors()
+        dynamicItemBehavior = nil
     }
 }
 
@@ -201,8 +177,6 @@ extension KaleidoscopeEngine: ItemDelegate
 
     func itemStateDidChange()
     {
-        guard dynamicAnimator != nil else { return }
-
         let elapsedTime = dynamicAnimator.elapsedTime()
         let timeSinceLastDelegateUpdate = elapsedTime - timeOfLastDelegateUpdate
         if timeSinceLastDelegateUpdate >= configuration.delegateUpdateInterval

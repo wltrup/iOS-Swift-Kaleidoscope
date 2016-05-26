@@ -30,12 +30,15 @@ class MainViewController: UIViewController
     override func viewWillAppear(animated: Bool)
     {
         super.viewWillAppear(animated)
+
         initialiseControls()
+        initialiseKaleidoscopeView()
     }
 
     override func viewDidAppear(animated: Bool)
     {
         super.viewDidAppear(animated)
+
         updateKaleidoscopeEngineGeometry()
         kaleidoscopeEngine?.start()
     }
@@ -68,13 +71,21 @@ extension MainViewController
         let itemElasticity = kaleidoscopeEngine.configuration.itemElasticity
 
         let controlsViewModel = ControlsViewController.ViewModel(
-            showRegions: false,
+            showAllRegions: false,
+            showRefRegion: false,
             numRegions: ValueInRange<Int>(min: 1, max: 20, cur: numRegions),
             numItemsPerRegion: ValueInRange<Int>(min: 1, max: 25, cur: numItemsPerRegion),
             itemSize: ValueInRange<CGFloat>(min: 5, max: 25, cur: itemSize),
-            itemElasticity: ValueInRange<CGFloat>(min: 0.9, max: 1.1, cur: itemElasticity)
+            itemElasticity: ValueInRange<CGFloat>(min: 0.8, max: 1.2, cur: itemElasticity)
         )
         controlsViewController.viewModel = controlsViewModel
+    }
+
+    private func initialiseKaleidoscopeView()
+    {
+        guard kaleidoscopeEngine != nil else { fatalError("MainViewController: kaleidoscopeEngine not set") }
+        guard kaleidoscopeView != nil else { fatalError("MainViewController: kaleidoscopeView not set") }
+        updateKaleidoscopeViewForChangeInNumRegions()
     }
 
     private func updateKaleidoscopeEngineGeometry()
@@ -87,6 +98,15 @@ extension MainViewController
 
         let viewRadius = kaleidoscopeView.viewRadius
         kaleidoscopeEngine.worldRadius = viewRadius
+
+        kaleidoscopeView.regionBoundaryPath = kaleidoscopeEngine.regionBoundaryPath()
+    }
+
+    private func updateKaleidoscopeViewForChangeInNumRegions()
+    {
+        kaleidoscopeView.numRegions = kaleidoscopeEngine.configuration.numRegions
+        kaleidoscopeView.regionAngle = kaleidoscopeEngine.configuration.regionAngle
+        kaleidoscopeView.regionBoundaryPath = kaleidoscopeEngine.regionBoundaryPath()
     }
 }
 
@@ -114,11 +134,17 @@ extension MainViewController: SegueIdentifierAware
 
 extension MainViewController: ControlsViewControllerDelegate
 {
-    func showRegionsDidChangeTo(showRegions: Bool)
-    { kaleidoscopeView?.setNeedsDisplay() }
+    func showAllRegionsDidChangeTo(showAllRegions: Bool)
+    { kaleidoscopeView?.showAllRegions = showAllRegions }
+
+    func showRefRegionDidChangeTo(showRefRegion: Bool)
+    { kaleidoscopeView?.showRefRegion = showRefRegion }
 
     func numRegionsDidChangeTo(numRegions: Int)
-    { kaleidoscopeEngine?.configuration.numRegions = numRegions }
+    {
+        kaleidoscopeEngine?.configuration.numRegions = numRegions
+        updateKaleidoscopeViewForChangeInNumRegions()
+    }
 
     func numItemsPerRegionsDidChangeTo(numItemsPerRegion: Int)
     { kaleidoscopeEngine?.configuration.numItemsPerRegion = numItemsPerRegion }
@@ -134,5 +160,5 @@ extension MainViewController: ControlsViewControllerDelegate
 extension MainViewController: KaleidoscopeEngineDelegate
 {
     func kaleidoscopeEngineDidUpdateState()
-    { kaleidoscopeView?.setNeedsDisplay() }
+    { kaleidoscopeView?.items = kaleidoscopeEngine!.items }
 }
