@@ -36,7 +36,11 @@ class MainViewController: UIViewController
     override func viewDidAppear(animated: Bool)
     {
         super.viewDidAppear(animated)
-        updateKaleidoscopeEngineGeometry()
+
+        let viewCenter = kaleidoscopeView.viewCenter
+        let viewRadius = kaleidoscopeView.viewRadius
+        updateKaleidoscopeEngineGeometry(viewCenter: viewCenter, viewRadius: viewRadius)
+
         kaleidoscopeEngine?.start()
     }
 
@@ -132,15 +136,11 @@ extension MainViewController
         controlsViewController.viewModel = controlsViewModel
     }
 
-    private func updateKaleidoscopeEngineGeometry()
+    private func updateKaleidoscopeEngineGeometry(viewCenter viewCenter: CGPoint, viewRadius: CGFloat)
     {
-        guard kaleidoscopeView != nil else { fatalError("MainViewController: kaleidoscopeView not set") }
         guard kaleidoscopeEngine != nil else { fatalError("MainViewController: kaleidoscopeEngine not set") }
 
-        let viewCenter = kaleidoscopeView.viewCenter
         kaleidoscopeEngine.worldCenter = viewCenter
-
-        let viewRadius = kaleidoscopeView.viewRadius
         kaleidoscopeEngine.worldRadius = viewRadius
 
         kaleidoscopeView.regionBoundaryPath = kaleidoscopeEngine.regionBoundaryPath()
@@ -151,6 +151,7 @@ extension MainViewController
         let engineConfiguration = kaleidoscopeEngine.configuration
         kaleidoscopeView.numRegions = engineConfiguration.numRegions.current
         kaleidoscopeView.regionAngle = engineConfiguration.regionAngle
+
         kaleidoscopeView.regionBoundaryPath = kaleidoscopeEngine.regionBoundaryPath()
     }
 }

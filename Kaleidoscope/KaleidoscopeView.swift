@@ -30,13 +30,19 @@ class KaleidoscopeView: UIView
         { didSet { setNeedsDisplay() } }
 
     var viewRadius: CGFloat
+    { return viewRadiusForContainerSize(bounds.size) }
+
+    var viewCenter: CGPoint
+    { return viewCenterForContainerBoundsRect(bounds) }
+
+    func viewRadiusForContainerSize(size: CGSize) -> CGFloat
     {
-        let w = bounds.size.width
-        let h = bounds.size.height
+        let w = size.width
+        let h = size.height
         return 0.95 * (w <= h ? w : h) / 2
     }
 
-    var viewCenter: CGPoint
+    func viewCenterForContainerBoundsRect(bounds: CGRect) -> CGPoint
     { return CGPoint(x: bounds.midX, y: bounds.midY) }
     
     override func drawRect(rect: CGRect)
