@@ -27,6 +27,7 @@ class KaleidoscopeView: UIView
         { didSet { setNeedsDisplay() } }
 
     var regionBoundaryPath: UIBezierPath?
+        { didSet { setNeedsDisplay() } }
 
     var viewRadius: CGFloat
     {

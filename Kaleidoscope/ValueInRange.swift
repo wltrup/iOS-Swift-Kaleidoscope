@@ -11,17 +11,19 @@ import UIKit
 
 struct ValueInRange<T: Comparable>
 {
-    let min: T
-    let max: T
-    let cur: T
+    let minimum: T
+    let maximum: T
+    var current: T
+    let step: T?
 
-    init(min: T, max: T, cur: T)
+    init(minimum: T, maximum: T, current: T, step: T? = nil)
     {
-        guard min <= cur && cur <= max else
-        { fatalError("'(\(min), \(cur), \(max))' do not satisfy \(min) ≤ \(cur) ≤ \(max)") }
+        guard minimum <= current && current <= maximum else
+        { fatalError("'(\(minimum), \(current), \(maximum))' do not satisfy \(minimum) ≤ \(current) ≤ \(maximum)") }
 
-        self.min = min
-        self.max = max
-        self.cur = cur
+        self.minimum = minimum
+        self.maximum = maximum
+        self.current = current
+        self.step = step
     }
 }

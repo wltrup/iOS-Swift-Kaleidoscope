@@ -9,6 +9,12 @@
 import UIKit
 
 
+class SteppableSlider: UISlider
+{
+    var step: Float = 0
+}
+
+
 @objc
 protocol ControlsViewControllerDelegate
 {
@@ -30,7 +36,7 @@ class ControlsViewController: UITableViewController
     @IBOutlet private weak var numRegionsStepper:        UIStepper!
     @IBOutlet private weak var numItemsPerRegionStepper: UIStepper!
     @IBOutlet private weak var itemSizeSlider:           UISlider!
-    @IBOutlet private weak var itemElasticitySlider:     UISlider!
+    @IBOutlet private weak var itemElasticitySlider:     SteppableSlider!
     @IBOutlet private weak var showAllRegionsSwitch:     UISwitch!
     @IBOutlet private weak var showRefRegionSwitch:      UISwitch!
 
@@ -77,28 +83,29 @@ extension ControlsViewController
         showRefRegionSwitch.on = showRefRegion
 
         let numRegions = viewModel.numRegions
-        numRegionsLabel.text = "\(numRegions.cur)"
-        numRegionsStepper.minimumValue = Double(numRegions.min)
-        numRegionsStepper.maximumValue = Double(numRegions.max)
-        numRegionsStepper.value = Double(numRegions.cur)
+        numRegionsLabel.text = "\(numRegions.current)"
+        numRegionsStepper.minimumValue = Double(numRegions.minimum)
+        numRegionsStepper.maximumValue = Double(numRegions.maximum)
+        numRegionsStepper.value = Double(numRegions.current)
 
         let numItemsPerRegion = viewModel.numItemsPerRegion
-        numItemsPerRegionLabel.text = "\(numItemsPerRegion.cur)"
-        numItemsPerRegionStepper.minimumValue = Double(numItemsPerRegion.min)
-        numItemsPerRegionStepper.maximumValue = Double(numItemsPerRegion.max)
-        numItemsPerRegionStepper.value = Double(numItemsPerRegion.cur)
+        numItemsPerRegionLabel.text = "\(numItemsPerRegion.current)"
+        numItemsPerRegionStepper.minimumValue = Double(numItemsPerRegion.minimum)
+        numItemsPerRegionStepper.maximumValue = Double(numItemsPerRegion.maximum)
+        numItemsPerRegionStepper.value = Double(numItemsPerRegion.current)
 
         let itemSize = viewModel.itemSize
-        itemSizeLabel.text = "\(Int(itemSize.cur))"
-        itemSizeSlider.minimumValue = Float(itemSize.min)
-        itemSizeSlider.maximumValue = Float(itemSize.max)
-        itemSizeSlider.value = Float(itemSize.cur)
+        itemSizeLabel.text = "\(Int(itemSize.current))"
+        itemSizeSlider.minimumValue = Float(itemSize.minimum)
+        itemSizeSlider.maximumValue = Float(itemSize.maximum)
+        itemSizeSlider.value = Float(itemSize.current)
 
         let itemElasticity = viewModel.itemElasticity
-        itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.stringFromNumber(itemElasticity.cur)
-        itemElasticitySlider.minimumValue = Float(itemElasticity.min)
-        itemElasticitySlider.maximumValue = Float(itemElasticity.max)
-        itemElasticitySlider.value = Float(itemElasticity.cur)
+        itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.stringFromNumber(itemElasticity.current)
+        if let step = viewModel.itemElasticity.step { itemElasticitySlider.step = Float(step) }
+        itemElasticitySlider.minimumValue = Float(itemElasticity.minimum)
+        itemElasticitySlider.maximumValue = Float(itemElasticity.maximum)
+        itemElasticitySlider.value = Float(itemElasticity.current)
     }
 
     @IBAction private func stepperValueChanged(sender: UIStepper)
@@ -128,7 +135,10 @@ extension ControlsViewController
             itemSizeLabel.text = "\(Int(itemSize))"
             delegate?.itemSizeDidChangeTo(itemSize)
         case itemElasticitySlider:
-            let itemElasticity = CGFloat(itemElasticitySlider.value)
+            let itemElasticity: CGFloat
+            let step = itemElasticitySlider.step
+            if step > 0 { itemElasticity = CGFloat(step * Float(Int(itemElasticitySlider.value / step))) }
+            else { itemElasticity = CGFloat(itemElasticitySlider.value) }
             itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.stringFromNumber(itemElasticity)
             delegate?.itemElasticityDidChangeTo(itemElasticity)
         default:

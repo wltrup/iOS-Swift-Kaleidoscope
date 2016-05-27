@@ -31,22 +31,22 @@ class KaleidoscopeEngine: NSObject
 
     struct Configuration
     {
-        var numRegions: Int = 6
-        var numItemsPerRegion: Int = 10
-        var itemSize: CGFloat = 15
-        var itemElasticity: CGFloat = 1.05
+        var numRegions = ValueInRange<Int>(minimum: 1, maximum: 20, current: 3)
+        var numItemsPerRegion = ValueInRange<Int>(minimum: 1, maximum: 25, current: 10)
+        var itemSize = ValueInRange<CGFloat>(minimum: 5, maximum: 25, current: 10)
+        var itemElasticity = ValueInRange<CGFloat>(minimum: 0.0, maximum: 1.2, current: 1.05, step: 0.05)
         var delegateUpdateInterval: NSTimeInterval = 1.0/90.0 // 90 updates per second
-        var regionAngle: CGFloat { return TWO_PI / CGFloat(numRegions) }
+        var regionAngle: CGFloat { return TWO_PI / CGFloat(numRegions.current) }
     }
     var configuration = Configuration() {
         didSet
         {
-            if configuration.numRegions != oldValue.numRegions ||
-                configuration.numItemsPerRegion != oldValue.numItemsPerRegion
+            if configuration.numRegions.current != oldValue.numRegions.current ||
+                configuration.numItemsPerRegion.current != oldValue.numItemsPerRegion.current
             { resetState() }
 
-            if configuration.itemElasticity != oldValue.itemElasticity
-            { dynamicItemBehavior?.elasticity = configuration.itemElasticity }
+            if configuration.itemElasticity.current != oldValue.itemElasticity.current
+            { dynamicItemBehavior?.elasticity = configuration.itemElasticity.current }
         }
     }
 
@@ -88,7 +88,7 @@ class KaleidoscopeEngine: NSObject
     {
         guard worldCenter != nil && worldRadius != nil else { return nil }
 
-        let numRegions = configuration.numRegions
+        let numRegions = configuration.numRegions.current
         let regionAngle = configuration.regionAngle
 
         if numRegions == 1
@@ -123,10 +123,10 @@ extension KaleidoscopeEngine
     {
         guard worldCenter != nil && worldRadius != nil else { return }
 
-        let numRegions = configuration.numRegions
+        let numRegions = configuration.numRegions.current
         assert(numRegions > 0, "invalid number of regions (\(numRegions))")
 
-        let numItemsPerRegion = configuration.numItemsPerRegion
+        let numItemsPerRegion = configuration.numItemsPerRegion.current
         assert(numItemsPerRegion > 0, "invalid number of items per region (\(numItemsPerRegion))")
 
         stopDynamicAnimator()
@@ -151,7 +151,7 @@ extension KaleidoscopeEngine
         let maxRadius = oneMinusLambda * worldRadius
         var rs = [CGFloat]()
 
-        let numItemsPerRegion = configuration.numItemsPerRegion
+        let numItemsPerRegion = configuration.numItemsPerRegion.current
         for _ in 0 ..< numItemsPerRegion
         {
             let theta = CGFloat.randomUniform(a: minTheta, b: maxTheta)
@@ -174,7 +174,7 @@ extension KaleidoscopeEngine
     private func startDynamicAnimator()
     {
         dynamicItemBehavior = UIDynamicItemBehavior(items: items)
-        dynamicItemBehavior.elasticity = configuration.itemElasticity
+        dynamicItemBehavior.elasticity = configuration.itemElasticity.current
         dynamicAnimator.addBehavior(dynamicItemBehavior)
 
         let collisionBehavior = UICollisionBehavior(items: items)
@@ -198,7 +198,7 @@ extension KaleidoscopeEngine
 extension KaleidoscopeEngine: ItemDelegate
 {
     func itemSize() -> CGFloat
-    { return configuration.itemSize }
+    { return configuration.itemSize.current }
 
     func itemStateDidChange()
     {
