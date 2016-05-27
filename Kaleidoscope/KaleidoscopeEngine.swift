@@ -171,8 +171,13 @@ extension KaleidoscopeEngine
         }
     }
 
+    // Apparently, behaviors were not being removed with dynamicAnimator.removeAllBehaviors() in
+    // stopDynamicAnimator() and it seems to be a known bug and the answer is to remove them explicitly.
+    // For good measure, I'm doing it before adding new ones as well as in stopDynamicAnimator().
+
     private func startDynamicAnimator()
     {
+        if let dynamicItemBehavior = dynamicItemBehavior { dynamicAnimator.removeBehavior(dynamicItemBehavior) }
         dynamicItemBehavior = UIDynamicItemBehavior(items: items)
         dynamicItemBehavior.elasticity = configuration.itemElasticity.current
         dynamicAnimator.addBehavior(dynamicItemBehavior)
@@ -182,15 +187,22 @@ extension KaleidoscopeEngine
         { collisionBehavior.addBoundaryWithIdentifier("region boundary", forPath: path) }
         dynamicAnimator.addBehavior(collisionBehavior)
 
+        if let gravityBehavior = gravityBehavior { dynamicAnimator.removeBehavior(gravityBehavior) }
         gravityBehavior = UIGravityBehavior(items: items)
         dynamicAnimator.addBehavior(gravityBehavior)
     }
 
     private func stopDynamicAnimator()
     {
-        dynamicAnimator.removeAllBehaviors()
-        dynamicItemBehavior = nil
+        if let gravityBehavior = gravityBehavior
+        { dynamicAnimator.removeBehavior(gravityBehavior) }
         gravityBehavior = nil
+
+        if let dynamicItemBehavior = dynamicItemBehavior
+        { dynamicAnimator.removeBehavior(dynamicItemBehavior) }
+        dynamicItemBehavior = nil
+
+        dynamicAnimator.removeAllBehaviors()
     }
 }
 
@@ -231,6 +243,8 @@ class Item: NSObject, UIDynamicItem
     var transform: CGAffineTransform = CGAffineTransformIdentity
         { didSet { delegate?.itemStateDidChange() } }
 
+    // Apparently, bounds is called only once then cached and never called again,
+    // so changes don't propagate to the animator. :(
     var bounds: CGRect
     { return CGRect(x: 0, y: 0, width: size, height: size) }
 
