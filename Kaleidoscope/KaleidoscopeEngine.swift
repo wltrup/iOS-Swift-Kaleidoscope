@@ -34,7 +34,7 @@ class KaleidoscopeEngine: NSObject
         var numRegions = ValueInRange<Int>(minimum: 1, maximum: 20, current: 3)
         var numItemsPerRegion = ValueInRange<Int>(minimum: 1, maximum: 25, current: 10)
         var itemSize = ValueInRange<CGFloat>(minimum: 5, maximum: 25, current: 10)
-        var itemElasticity = ValueInRange<CGFloat>(minimum: 0.0, maximum: 1.2, current: 1.05, step: 0.05)
+        var itemElasticity = ValueInRange<CGFloat>(minimum: 0.0, maximum: 1.2, current: 1.05, step: 0.01)
         var delegateUpdateInterval: NSTimeInterval = 1.0/90.0 // 90 updates per second
         var regionAngle: CGFloat { return TWO_PI / CGFloat(numRegions.current) }
     }
