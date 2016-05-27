@@ -36,11 +36,7 @@ class MainViewController: UIViewController
     override func viewDidAppear(animated: Bool)
     {
         super.viewDidAppear(animated)
-
-        let viewCenter = kaleidoscopeView.viewCenter
-        let viewRadius = kaleidoscopeView.viewRadius
-        updateKaleidoscopeEngineGeometry(viewCenter: viewCenter, viewRadius: viewRadius)
-
+        updateKaleidoscopeEngineGeometry()
         kaleidoscopeEngine?.start()
     }
 
@@ -49,6 +45,18 @@ class MainViewController: UIViewController
         kaleidoscopeEngine?.stop()
         super.viewWillDisappear(animated)
     }
+
+    override func viewWillTransitionToSize(size: CGSize,
+                                           withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator)
+    {
+        coordinator.animateAlongsideTransition({_ in})
+        {
+            [weak self] _ in
+            if let myself = self { myself.updateKaleidoscopeEngineGeometry() }
+        }
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    }
+
 }
 
 
@@ -136,11 +144,14 @@ extension MainViewController
         controlsViewController.viewModel = controlsViewModel
     }
 
-    private func updateKaleidoscopeEngineGeometry(viewCenter viewCenter: CGPoint, viewRadius: CGFloat)
+    private func updateKaleidoscopeEngineGeometry()
     {
         guard kaleidoscopeEngine != nil else { fatalError("MainViewController: kaleidoscopeEngine not set") }
 
+        let viewCenter = kaleidoscopeView.viewCenter
         kaleidoscopeEngine.worldCenter = viewCenter
+
+        let viewRadius = kaleidoscopeView.viewRadius
         kaleidoscopeEngine.worldRadius = viewRadius
 
         kaleidoscopeView.regionBoundaryPath = kaleidoscopeEngine.regionBoundaryPath()
