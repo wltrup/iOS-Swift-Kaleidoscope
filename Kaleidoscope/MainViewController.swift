@@ -154,6 +154,9 @@ extension MainViewController
         let viewRadius = kaleidoscopeView.viewRadius
         kaleidoscopeEngine.worldRadius = viewRadius
 
+        let interfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
+        kaleidoscopeEngine.configuration.interfaceOrientation = interfaceOrientation
+
         kaleidoscopeView.regionBoundaryPath = kaleidoscopeEngine.regionBoundaryPath()
     }
 

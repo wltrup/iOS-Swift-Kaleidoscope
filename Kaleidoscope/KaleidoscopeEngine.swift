@@ -35,6 +35,7 @@ class KaleidoscopeEngine: NSObject
         var numItemsPerRegion = ValueInRange<Int>(minimum: 1, maximum: 25, current: 10)
         var itemSize = ValueInRange<CGFloat>(minimum: 5, maximum: 25, current: 10)
         var itemElasticity = ValueInRange<CGFloat>(minimum: 0.0, maximum: 1.2, current: 1.05, step: 0.01)
+        var interfaceOrientation: UIInterfaceOrientation = .Unknown
         var delegateUpdateInterval: NSTimeInterval = 1.0/60.0 // 60 updates per second
         var regionAngle: CGFloat { return TWO_PI / CGFloat(numRegions.current) }
     }
@@ -61,27 +62,14 @@ class KaleidoscopeEngine: NSObject
 
     func start()
     {
-        let motionManager = KaleidoscopeEngine.motionManager
-        if motionManager.accelerometerAvailable
-        {
-            motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue())
-            {
-                [weak self] (data, error) in
-                guard error == nil else { return }
-                if let myself = self, data = data
-                {
-                    myself.gravityBehavior?.gravityDirection =
-                        CGVector(dx: data.acceleration.x, dy: -data.acceleration.y)
-                }
-            }
-        }
+        startAccelerometer()
         startDynamicAnimator()
     }
 
     func stop()
     {
         stopDynamicAnimator()
-        KaleidoscopeEngine.motionManager.stopAccelerometerUpdates()
+        stopAccelerometer()
     }
     
     func regionBoundaryPath() -> UIBezierPath?
@@ -170,6 +158,38 @@ extension KaleidoscopeEngine
             items.append(item)
         }
     }
+
+    private func startAccelerometer()
+    {
+        let motionManager = KaleidoscopeEngine.motionManager
+        if motionManager.accelerometerAvailable
+        {
+            motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue())
+            {
+                [weak self] (data, error) in
+                guard error == nil else { return }
+                if let myself = self, data = data
+                {
+                    let gravityDirection: CGVector
+                    switch myself.configuration.interfaceOrientation
+                    {
+                    case .Portrait, .Unknown:
+                        gravityDirection = CGVector(dx: +data.acceleration.x, dy: -data.acceleration.y)
+                    case .PortraitUpsideDown:
+                        gravityDirection = CGVector(dx: +data.acceleration.x, dy: +data.acceleration.y)
+                    case .LandscapeLeft:
+                        gravityDirection = CGVector(dx: -data.acceleration.y, dy: +data.acceleration.x)
+                    case .LandscapeRight:
+                        gravityDirection = CGVector(dx: +data.acceleration.y, dy: -data.acceleration.x)
+                    }
+                    myself.gravityBehavior?.gravityDirection = gravityDirection
+                }
+            }
+        }
+    }
+
+    func stopAccelerometer()
+    { KaleidoscopeEngine.motionManager.stopAccelerometerUpdates() }
 
     // Apparently, behaviors were not being removed with dynamicAnimator.removeAllBehaviors() in
     // stopDynamicAnimator() and it seems to be a known bug and the answer is to remove them explicitly.
