@@ -125,6 +125,7 @@
 				TargetAttributes = {
 					3B7A01261CF3ECFA00543C90 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 9MP5BB6ZRE;
 					};
 				};
 			};
@@ -292,10 +293,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 9MP5BB6ZRE;
 				INFOPLIST_FILE = Kaleidoscope/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.restlessbrain.Kaleidoscope;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -303,10 +306,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 9MP5BB6ZRE;
 				INFOPLIST_FILE = Kaleidoscope/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.restlessbrain.Kaleidoscope;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
