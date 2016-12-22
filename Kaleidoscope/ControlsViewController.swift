@@ -18,27 +18,27 @@ class SteppableSlider: UISlider
 @objc
 protocol ControlsViewControllerDelegate
 {
-    func showAllRegionsDidChangeTo(showAllRegions: Bool)
-    func showRefRegionDidChangeTo(showRefRegion: Bool)
-    func numRegionsDidChangeTo(numRegions: Int)
-    func numItemsPerRegionsDidChangeTo(numItemsPerRegion: Int)
-    func itemSizeDidChangeTo(itemSize: CGFloat)
-    func itemElasticityDidChangeTo(itemElasticity: CGFloat)
+    func showAllRegionsDidChangeTo(_ showAllRegions: Bool)
+    func showRefRegionDidChangeTo(_ showRefRegion: Bool)
+    func numRegionsDidChangeTo(_ numRegions: Int)
+    func numItemsPerRegionsDidChangeTo(_ numItemsPerRegion: Int)
+    func itemSizeDidChangeTo(_ itemSize: CGFloat)
+    func itemElasticityDidChangeTo(_ itemElasticity: CGFloat)
 }
 
 
 class ControlsViewController: UITableViewController
 {
-    @IBOutlet private weak var numRegionsLabel:          UILabel!
-    @IBOutlet private weak var numItemsPerRegionLabel:   UILabel!
-    @IBOutlet private weak var itemSizeLabel:            UILabel!
-    @IBOutlet private weak var itemElasticityLabel:      UILabel!
-    @IBOutlet private weak var numRegionsStepper:        UIStepper!
-    @IBOutlet private weak var numItemsPerRegionStepper: UIStepper!
-    @IBOutlet private weak var itemSizeSlider:           UISlider!
-    @IBOutlet private weak var itemElasticitySlider:     SteppableSlider!
-    @IBOutlet private weak var showAllRegionsSwitch:     UISwitch!
-    @IBOutlet private weak var showRefRegionSwitch:      UISwitch!
+    @IBOutlet fileprivate weak var numRegionsLabel:          UILabel!
+    @IBOutlet fileprivate weak var numItemsPerRegionLabel:   UILabel!
+    @IBOutlet fileprivate weak var itemSizeLabel:            UILabel!
+    @IBOutlet fileprivate weak var itemElasticityLabel:      UILabel!
+    @IBOutlet fileprivate weak var numRegionsStepper:        UIStepper!
+    @IBOutlet fileprivate weak var numItemsPerRegionStepper: UIStepper!
+    @IBOutlet fileprivate weak var itemSizeSlider:           UISlider!
+    @IBOutlet fileprivate weak var itemElasticitySlider:     SteppableSlider!
+    @IBOutlet fileprivate weak var showAllRegionsSwitch:     UISwitch!
+    @IBOutlet fileprivate weak var showRefRegionSwitch:      UISwitch!
 
     weak var delegate: ControlsViewControllerDelegate?
 
@@ -52,9 +52,9 @@ class ControlsViewController: UITableViewController
         let itemSize:          ValueInRange<CGFloat>
         let itemElasticity:    ValueInRange<CGFloat>
 
-        static var itemElasticityNumberFormatter: NSNumberFormatter
+        static var itemElasticityNumberFormatter: NumberFormatter
         {
-            let formatter = NSNumberFormatter()
+            let formatter = NumberFormatter()
             formatter.minimumIntegerDigits = 1
             formatter.minimumFractionDigits = 2
             formatter.maximumFractionDigits = 2
@@ -62,7 +62,7 @@ class ControlsViewController: UITableViewController
         }
     }
 
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
         updateUI()
@@ -72,15 +72,15 @@ class ControlsViewController: UITableViewController
 
 extension ControlsViewController
 {
-    private func updateUI()
+    fileprivate func updateUI()
     {
         guard viewModel != nil else { fatalError("ControlsViewController: view model not set") }
 
         let showAllRegions = viewModel.showAllRegions
-        showAllRegionsSwitch.on = showAllRegions
+        showAllRegionsSwitch.isOn = showAllRegions
 
         let showRefRegion = viewModel.showRefRegion
-        showRefRegionSwitch.on = showRefRegion
+        showRefRegionSwitch.isOn = showRefRegion
 
         let numRegions = viewModel.numRegions
         numRegionsLabel.text = "\(numRegions.current)"
@@ -101,14 +101,15 @@ extension ControlsViewController
         itemSizeSlider.value = Float(itemSize.current)
 
         let itemElasticity = viewModel.itemElasticity
-        itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.stringFromNumber(itemElasticity.current)
+        let nsNum = NSNumber(floatLiteral: Double(itemElasticity.current))
+        itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.string(from: nsNum)
         if let step = viewModel.itemElasticity.step { itemElasticitySlider.step = Float(step) }
         itemElasticitySlider.minimumValue = Float(itemElasticity.minimum)
         itemElasticitySlider.maximumValue = Float(itemElasticity.maximum)
         itemElasticitySlider.value = Float(itemElasticity.current)
     }
 
-    @IBAction private func stepperValueChanged(sender: UIStepper)
+    @IBAction fileprivate func stepperValueChanged(_ sender: UIStepper)
     {
         switch sender
         {
@@ -126,7 +127,7 @@ extension ControlsViewController
         }
     }
 
-    @IBAction private func sliderValueChanged(sender: UISlider)
+    @IBAction fileprivate func sliderValueChanged(_ sender: UISlider)
     {
         switch sender
         {
@@ -139,7 +140,8 @@ extension ControlsViewController
             let step = itemElasticitySlider.step
             if step > 0 { itemElasticity = CGFloat(step * Float(Int(itemElasticitySlider.value / step))) }
             else { itemElasticity = CGFloat(itemElasticitySlider.value) }
-            itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.stringFromNumber(itemElasticity)
+            let nsNum = NSNumber(floatLiteral: Double(itemElasticity))
+            itemElasticityLabel.text = ViewModel.itemElasticityNumberFormatter.string(from: nsNum)
             delegate?.itemElasticityDidChangeTo(itemElasticity)
         default:
             fatalError("Unhandled sender in call to sliderValueChanged(:)")
@@ -147,15 +149,15 @@ extension ControlsViewController
         }
     }
 
-    @IBAction private func switchValueChanged(sender: UISwitch)
+    @IBAction fileprivate func switchValueChanged(_ sender: UISwitch)
     {
         switch sender
         {
         case showAllRegionsSwitch:
-            let showAllRegions = showAllRegionsSwitch.on
+            let showAllRegions = showAllRegionsSwitch.isOn
             delegate?.showAllRegionsDidChangeTo(showAllRegions)
         case showRefRegionSwitch:
-            let showRefRegion = showRefRegionSwitch.on
+            let showRefRegion = showRefRegionSwitch.isOn
             delegate?.showRefRegionDidChangeTo(showRefRegion)
         default:
             fatalError("Unhandled sender in call to switchValueChanged(:)")

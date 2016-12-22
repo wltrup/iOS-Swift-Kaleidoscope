@@ -39,7 +39,7 @@ class KaleidoscopeView: UIView
     var viewCenter: CGPoint
     { return CGPoint(x: bounds.midX, y: bounds.midY) }
 
-    override func drawRect(rect: CGRect)
+    override func draw(_ rect: CGRect)
     {
         guard self.numRegions != nil else { return }
         let numRegions = self.numRegions!
@@ -49,7 +49,7 @@ class KaleidoscopeView: UIView
 
         if showAllRegions
         {
-            drawCircleAt(viewCenter, radius: viewRadius, strokeColor: UIColor.whiteColor())
+            drawCircleAt(viewCenter, radius: viewRadius, strokeColor: UIColor.white)
 
             if numRegions > 1
             { drawRadialLines(numLines: numRegions, centerPoint: viewCenter, radius: viewRadius, angle: regionAngle) }
@@ -87,31 +87,31 @@ class KaleidoscopeView: UIView
 
 extension KaleidoscopeView
 {
-    private func drawReferenceRegion()
+    fileprivate func drawReferenceRegion()
     {
         if let path = self.regionBoundaryPath
         {
-            UIColor.whiteColor().setStroke()
+            UIColor.white.setStroke()
             path.stroke()
-            UIColor.redColor().colorWithAlphaComponent(0.1).setFill()
+            UIColor.red.withAlphaComponent(0.1).setFill()
             path.fill()
         }
     }
 
-    private func fillItem(item: Item)
+    fileprivate func fillItem(_ item: Item)
     { drawCircleAt(x: item.center.x, y: item.center.y, radius: item.size/2, strokeColor: nil, fillColor: item.color) }
 
-    private func drawCircleAt(p: CGPoint, radius: CGFloat, strokeColor: UIColor? = nil, fillColor: UIColor? = nil)
+    fileprivate func drawCircleAt(_ p: CGPoint, radius: CGFloat, strokeColor: UIColor? = nil, fillColor: UIColor? = nil)
     { drawCircleAt(x: p.x, y: p.y, radius: radius, strokeColor: strokeColor, fillColor: fillColor) }
 
-    private func drawCircleAt(x x: CGFloat, y: CGFloat, radius: CGFloat,
+    fileprivate func drawCircleAt(x: CGFloat, y: CGFloat, radius: CGFloat,
                                 strokeColor: UIColor? = nil, fillColor: UIColor? = nil)
     {
         let diameter = 2*radius
         let origin = CGPoint(x: x - radius, y: y - radius)
         let size = CGSize(width: diameter, height: diameter)
         let rect = CGRect(origin: origin, size: size)
-        let circle = UIBezierPath(ovalInRect: rect)
+        let circle = UIBezierPath(ovalIn: rect)
         if strokeColor != nil
         {
             strokeColor!.setStroke()
@@ -124,7 +124,7 @@ extension KaleidoscopeView
         }
     }
 
-    private func drawRadialLines(numLines numLines: Int, centerPoint: CGPoint,
+    fileprivate func drawRadialLines(numLines: Int, centerPoint: CGPoint,
                                           radius: CGFloat, angle: CGFloat,
                                           strokeColor: UIColor? = nil)
     {
@@ -133,14 +133,14 @@ extension KaleidoscopeView
         {
             let theta = CGFloat(n) * angle
             let point = pointOffsetFromPointAtCenter(centerPoint, withRadius: radius, andAngle: theta)
-            path.moveToPoint(centerPoint)
-            path.addLineToPoint(point)
+            path.move(to: centerPoint)
+            path.addLine(to: point)
         }
-        (strokeColor ?? UIColor.whiteColor()).setStroke()
+        (strokeColor ?? UIColor.white).setStroke()
         path.stroke()
     }
 
-    private func pointOffsetFromPointAtCenter(centerPoint: CGPoint,
+    fileprivate func pointOffsetFromPointAtCenter(_ centerPoint: CGPoint,
                                               withRadius radius: CGFloat,
                                                          andAngle angle: CGFloat) -> CGPoint
     {

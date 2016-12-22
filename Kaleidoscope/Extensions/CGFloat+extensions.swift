@@ -12,7 +12,7 @@ public extension CGFloat
     { return CGFloat(arc4random_uniform(UInt32.max)) / CGFloat(UInt32.max - 1) }
 
     // Returns a uniformly distributed random CGFloat in the range [min(a,b), max(a,b)].
-    public static func randomUniform(a a: CGFloat, b: CGFloat) -> CGFloat
+    public static func randomUniform(a: CGFloat, b: CGFloat) -> CGFloat
     { return a + (b - a) * CGFloat.randomUniform01 }
 
     // Returns a uniformly distributed random boolean.

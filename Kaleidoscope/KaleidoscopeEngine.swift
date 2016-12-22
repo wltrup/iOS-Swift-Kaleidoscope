@@ -35,8 +35,8 @@ class KaleidoscopeEngine: NSObject
         var numItemsPerRegion = ValueInRange<Int>(minimum: 1, maximum: 25, current: 10)
         var itemSize = ValueInRange<CGFloat>(minimum: 5, maximum: 25, current: 10)
         var itemElasticity = ValueInRange<CGFloat>(minimum: 0.0, maximum: 1.2, current: 1.05, step: 0.01)
-        var interfaceOrientation: UIInterfaceOrientation = .Unknown
-        var delegateUpdateInterval: NSTimeInterval = 1.0/60.0 // 60 updates per second
+        var interfaceOrientation: UIInterfaceOrientation = .unknown
+        var delegateUpdateInterval: TimeInterval = 1.0/60.0 // 60 updates per second
         var regionAngle: CGFloat { return TWO_PI / CGFloat(numRegions.current) }
     }
     var configuration = Configuration() {
@@ -51,14 +51,14 @@ class KaleidoscopeEngine: NSObject
         }
     }
 
-    private(set) var items = [Item]()
+    fileprivate(set) var items = [Item]()
 
-    private var dynamicAnimator = UIDynamicAnimator()
-    private var dynamicItemBehavior: UIDynamicItemBehavior!
-    private var gravityBehavior: UIGravityBehavior!
+    fileprivate var dynamicAnimator = UIDynamicAnimator()
+    fileprivate var dynamicItemBehavior: UIDynamicItemBehavior!
+    fileprivate var gravityBehavior: UIGravityBehavior!
 
-    private var timeOfLastDelegateUpdate: NSTimeInterval = 0
-    private static let motionManager = CMMotionManager()
+    fileprivate var timeOfLastDelegateUpdate: TimeInterval = 0
+    fileprivate static let motionManager = CMMotionManager()
 
     func start()
     {
@@ -87,18 +87,18 @@ class KaleidoscopeEngine: NSObject
         else
         {
             let path = UIBezierPath()
-            path.moveToPoint(worldCenter)
+            path.move(to: worldCenter)
 
             let p = CGPoint(x: worldCenter.x + worldRadius * cos(regionAngle),
                             y: worldCenter.y - worldRadius * sin(regionAngle))
-            path.addLineToPoint(p)
+            path.addLine(to: p)
 
             let startAngle = CGFloat(numRegions-1) * regionAngle
             let   endAngle = CGFloat(numRegions)   * regionAngle
-            path.addArcWithCenter(worldCenter, radius: worldRadius,
+            path.addArc(withCenter: worldCenter, radius: worldRadius,
                                   startAngle: startAngle, endAngle: endAngle, clockwise: true)
 
-            path.addLineToPoint(worldCenter)
+            path.addLine(to: worldCenter)
             return path
         }
     }
@@ -107,7 +107,7 @@ class KaleidoscopeEngine: NSObject
 
 extension KaleidoscopeEngine
 {
-    private func resetState()
+    fileprivate func resetState()
     {
         guard worldCenter != nil && worldRadius != nil else { return }
 
@@ -122,7 +122,7 @@ extension KaleidoscopeEngine
         startDynamicAnimator()
     }
 
-    private func createItems()
+    fileprivate func createItems()
     {
         guard worldCenter != nil else { fatalError("worldCenter not set") }
         guard worldRadius != nil else { fatalError("worldRadius not set") }
@@ -159,27 +159,27 @@ extension KaleidoscopeEngine
         }
     }
 
-    private func startAccelerometer()
+    fileprivate func startAccelerometer()
     {
         let motionManager = KaleidoscopeEngine.motionManager
-        if motionManager.accelerometerAvailable
+        if motionManager.isAccelerometerAvailable
         {
-            motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue())
+            motionManager.startAccelerometerUpdates(to: OperationQueue.main)
             {
                 [weak self] (data, error) in
                 guard error == nil else { return }
-                if let myself = self, data = data
+                if let myself = self, let data = data
                 {
                     let gravityDirection: CGVector
                     switch myself.configuration.interfaceOrientation
                     {
-                    case .Portrait, .Unknown:
+                    case .portrait, .unknown:
                         gravityDirection = CGVector(dx: +data.acceleration.x, dy: -data.acceleration.y)
-                    case .PortraitUpsideDown:
+                    case .portraitUpsideDown:
                         gravityDirection = CGVector(dx: +data.acceleration.x, dy: +data.acceleration.y)
-                    case .LandscapeLeft:
+                    case .landscapeLeft:
                         gravityDirection = CGVector(dx: -data.acceleration.y, dy: +data.acceleration.x)
-                    case .LandscapeRight:
+                    case .landscapeRight:
                         gravityDirection = CGVector(dx: +data.acceleration.y, dy: -data.acceleration.x)
                     }
                     myself.gravityBehavior?.gravityDirection = gravityDirection
@@ -195,7 +195,7 @@ extension KaleidoscopeEngine
     // stopDynamicAnimator() and it seems to be a known bug and the answer is to remove them explicitly.
     // For good measure, I'm doing it before adding new ones as well as in stopDynamicAnimator().
 
-    private func startDynamicAnimator()
+    fileprivate func startDynamicAnimator()
     {
         if let dynamicItemBehavior = dynamicItemBehavior { dynamicAnimator.removeBehavior(dynamicItemBehavior) }
         dynamicItemBehavior = UIDynamicItemBehavior(items: items)
@@ -204,7 +204,7 @@ extension KaleidoscopeEngine
 
         let collisionBehavior = UICollisionBehavior(items: items)
         if let path = regionBoundaryPath()
-        { collisionBehavior.addBoundaryWithIdentifier("region boundary", forPath: path) }
+        { collisionBehavior.addBoundary(withIdentifier: "region boundary" as NSCopying, for: path) }
         dynamicAnimator.addBehavior(collisionBehavior)
 
         if let gravityBehavior = gravityBehavior { dynamicAnimator.removeBehavior(gravityBehavior) }
@@ -212,7 +212,7 @@ extension KaleidoscopeEngine
         dynamicAnimator.addBehavior(gravityBehavior)
     }
 
-    private func stopDynamicAnimator()
+    fileprivate func stopDynamicAnimator()
     {
         if let gravityBehavior = gravityBehavior
         { dynamicAnimator.removeBehavior(gravityBehavior) }
@@ -234,7 +234,7 @@ extension KaleidoscopeEngine: ItemDelegate
 
     func itemStateDidChange()
     {
-        let elapsedTime = dynamicAnimator.elapsedTime()
+        let elapsedTime = dynamicAnimator.elapsedTime
         let timeSinceLastDelegateUpdate = elapsedTime - timeOfLastDelegateUpdate
         if timeSinceLastDelegateUpdate >= configuration.delegateUpdateInterval
         {
@@ -260,7 +260,7 @@ class Item: NSObject, UIDynamicItem
     var center: CGPoint
         { didSet { delegate?.itemStateDidChange() } }
 
-    var transform: CGAffineTransform = CGAffineTransformIdentity
+    var transform: CGAffineTransform = CGAffineTransform.identity
         { didSet { delegate?.itemStateDidChange() } }
 
     // Apparently, bounds is called only once then cached and never called again,
@@ -272,7 +272,7 @@ class Item: NSObject, UIDynamicItem
     { return (delegate != nil ? delegate!.itemSize() : 5) }
 
     var collisionBoundsType: UIDynamicItemCollisionBoundsType
-    { return .Ellipse }
+    { return .ellipse }
 
     let worldCenter: CGPoint
     let color: UIColor
@@ -288,10 +288,10 @@ class Item: NSObject, UIDynamicItem
     {
         let dx = center.x - worldCenter.x
         let dy = center.y - worldCenter.y
-        return (TWO_PI - atan2(dy, dx)) % TWO_PI
+        return (TWO_PI - atan2(dy, dx)).truncatingRemainder(dividingBy: TWO_PI)
     }
 
-    private init(worldCenter: CGPoint, r: CGFloat, theta: CGFloat)
+    fileprivate init(worldCenter: CGPoint, r: CGFloat, theta: CGFloat)
     {
         self.worldCenter = worldCenter
         self.color = UIColor.randomColor()
