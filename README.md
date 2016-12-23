@@ -1,7 +1,8 @@
 # Kaleidoscope
 A simulation of a [**kaleidoscope**](https://en.wikipedia.org/wiki/Kaleidoscope), using `UIKit Dynamics`. Something I wrote in a few days when I was bored.
 
-![demo 1](https://github.com/wltrup/iOS-Swift-Kaleidoscope/blob/master/demo1.gif) | ![demo 2](https://github.com/wltrup/iOS-Swift-Kaleidoscope/blob/master/demo2.gif)
+![demo 1](https://github.com/wltrup/iOS-Swift-Kaleidoscope/blob/master/demo1.gif)
+![demo 2](https://github.com/wltrup/iOS-Swift-Kaleidoscope/blob/master/demo2.gif)
 
 ## screen captures
 
