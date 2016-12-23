@@ -6,9 +6,9 @@ A simulation of a [**kaleidoscope**](https://en.wikipedia.org/wiki/Kaleidoscope)
 
 ## screen captures
 
-- .mov [download](https://github.com/wltrup/iOS-Swift-Kaleidoscope/blob/master/demo.mov?raw=true)
+- ![.gif](https://github.com/wltrup/iOS-Swift-Kaleidoscope/blob/master/demo.gif)
 - .mp4 [download](https://github.com/wltrup/iOS-Swift-Kaleidoscope/blob/master/demo.mp4?raw=true)
-- .gif coming as soon as I can find a decent converter.
+- .mov [download](https://github.com/wltrup/iOS-Swift-Kaleidoscope/blob/master/demo.mov?raw=true)
 
 ## Author ##
 
